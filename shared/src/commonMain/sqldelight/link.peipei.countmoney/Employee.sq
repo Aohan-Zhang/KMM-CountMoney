@@ -1,0 +1,24 @@
+CREATE TABLE Employee(
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    base_salary INTEGER,
+    housing_salary INTEGER,
+    performance_salary INTEGER,
+    date_of_joining TEXT,
+    phoneNumber TEXT
+);
+
+queryById:
+SELECT * FROM Employee WHERE id = ?;
+
+selectAllEmployees:
+SELECT * FROM Employee;
+
+deleteEmployee:
+DELETE FROM Employee WHERE id = ?;
+
+deleteAllEmployees:
+DELETE FROM Employee;
+
+insertEmployee:
+INSERT INTO Employee(name, base_salary, housing_salary, performance_salary, date_of_joining, phoneNumber) VALUES(?,?, ?, ?, ?, ?);
