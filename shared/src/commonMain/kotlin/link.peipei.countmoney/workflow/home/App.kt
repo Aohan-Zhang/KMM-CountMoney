@@ -1,4 +1,4 @@
-package link.peipei.countmoney.home
+package link.peipei.countmoney.workflow.home
 
 import androidx.compose.runtime.Composable
 import cafe.adriel.voyager.navigator.Navigator

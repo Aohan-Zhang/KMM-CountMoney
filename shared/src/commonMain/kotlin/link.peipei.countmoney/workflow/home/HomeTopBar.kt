@@ -1,4 +1,4 @@
-package link.peipei.countmoney.home
+package link.peipei.countmoney.workflow.home
 
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides

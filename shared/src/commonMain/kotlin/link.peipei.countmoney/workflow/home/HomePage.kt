@@ -1,4 +1,4 @@
-package link.peipei.countmoney.home
+package link.peipei.countmoney.workflow.home
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.WindowInsets
@@ -12,8 +12,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import cafe.adriel.voyager.navigator.tab.CurrentTab
 import cafe.adriel.voyager.navigator.tab.TabNavigator
 import com.moriatsushi.insetsx.systemBars
-import link.peipei.countmoney.home.event.EventPageTab
-import link.peipei.countmoney.home.record.RecordPageTab
+import link.peipei.countmoney.workflow.home.event.EventPageTab
+import link.peipei.countmoney.workflow.home.record.RecordPageTab
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

@@ -1,24 +1,31 @@
-CREATE TABLE Employee(
+CREATE TABLE employee(
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT,
-    base_salary INTEGER,
-    housing_salary INTEGER,
-    performance_salary INTEGER,
-    date_of_joining TEXT,
-    phoneNumber TEXT
+    gender TEXT,
+    dateOfJoining TEXT,
+    phoneNumber TEXT,
+    position TEXT
 );
-
 queryById:
-SELECT * FROM Employee WHERE id = ?;
+SELECT * FROM employee WHERE id = ?;
 
 selectAllEmployees:
-SELECT * FROM Employee;
+SELECT * FROM employee;
 
 deleteEmployee:
-DELETE FROM Employee WHERE id = ?;
+DELETE FROM employee WHERE id = ?;
 
 deleteAllEmployees:
-DELETE FROM Employee;
+DELETE FROM employee;
 
+insert:
+INSERT INTO employee(name, gender,dateOfJoining, phoneNumber,position) VALUES(?,?,  ?, ?, ?);
 insertEmployee:
-INSERT INTO Employee(name, base_salary, housing_salary, performance_salary, date_of_joining, phoneNumber) VALUES(?,?, ?, ?, ?, ?);
+INSERT INTO employee(name, gender,dateOfJoining, phoneNumber,position) VALUES ?;
+
+lastInsertRowId:
+SELECT last_insert_rowid();
+
+
+
+

@@ -1,4 +1,4 @@
-package link.peipei.countmoney.home.record
+package link.peipei.countmoney.workflow.home.record
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
@@ -10,7 +10,4 @@ class RecordPageViewModel(private val employeeDao: EmployeeDao) : ScreenModel {
     val data = employeeDao.getAllEmployees()
         .stateIn(coroutineScope, SharingStarted.WhileSubscribed(500), listOf())
 
-    fun insert() {
-        employeeDao.insert("name", 1, 1, 1, "date", "phone")
-    }
 }

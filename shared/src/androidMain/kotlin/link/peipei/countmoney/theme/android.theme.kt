@@ -8,9 +8,8 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 
-//actual fun isSupportDynamicColor(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
-//disabled dynamic color
-actual fun isSupportDynamicColor(): Boolean = false
+actual fun isSupportDynamicColor(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+
 
 @SuppressLint("NewApi")
 @Composable
