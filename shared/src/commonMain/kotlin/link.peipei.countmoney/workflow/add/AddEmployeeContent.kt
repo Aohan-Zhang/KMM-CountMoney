@@ -10,15 +10,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
@@ -34,8 +33,6 @@ import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import io.ktor.util.date.GMTDate
 
 
@@ -46,26 +43,24 @@ fun AddEmployeeContent(modifier: Modifier = Modifier) {
     val datePickerState = rememberDatePickerState()
     val focusManager = LocalFocusManager.current
     if (openDialog) {
-        focusManager.clearFocus(true)
-        Dialog(
-            properties = DialogProperties(dismissOnClickOutside = true),
+        DatePickerDialog(
             onDismissRequest = { openDialog = false },
-        ) {
-            Surface(
-                shape = RoundedCornerShape(28.dp),
-                shadowElevation = 6.dp,
-                color = MaterialTheme.colorScheme.surfaceVariant
-            ) {
-                DatePicker(state = datePickerState, title = {
-                    Text(
-                        modifier = Modifier.padding(16.dp),
-                        text = "入职时间",
-                        color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = FontWeight.SemiBold
-                    )
-                })
-            }
+            confirmButton = {
+                Text("确定", color = MaterialTheme.colorScheme.primary)
+            },
+            dismissButton = {
+                Text("取消", color = MaterialTheme.colorScheme.primary)
+            },
+            ){
+            DatePicker(state = datePickerState, title = {
+                Text(
+                    modifier = Modifier.padding(16.dp),
+                    text = "入职时间",
+                    fontWeight = FontWeight.SemiBold
+                )
+            })
         }
+        focusManager.clearFocus(true)
     }
     val interactionSource = remember { MutableInteractionSource() }
 
