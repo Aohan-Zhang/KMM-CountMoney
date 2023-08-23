@@ -8,9 +8,10 @@ plugins {
     id("com.google.devtools.ksp") version "1.9.0-1.0.12"
     id("de.jensklingenberg.ktorfit") version "1.0.0"
     id("app.cash.sqldelight")
+    id("kotlinx-serialization")
 }
 
-val ktorVersion = "2.3.1"
+val ktorVersion = "2.3.3"
 val ktorfitVersion = "1.4.4"
 val sqlDelightVersion = "2.0.0"
 configure<KtorfitGradleConfiguration> {
@@ -56,6 +57,9 @@ kotlin {
                 implementation("org.kodein.di:kodein-di-framework-compose:7.20.1")
                 implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
                 implementation("app.cash.sqldelight:coroutines-extensions:$sqlDelightVersion")
+                implementation("io.ktor:ktor-client-serialization:$ktorVersion")
+                implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+                implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 
 
             }
