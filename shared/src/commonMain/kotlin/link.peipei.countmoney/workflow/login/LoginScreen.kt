@@ -1,12 +1,8 @@
 package link.peipei.countmoney.workflow.login
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.kodein.rememberScreenModel
 
@@ -21,11 +17,14 @@ object LoginScreen : Screen {
             onLoginClick = {
                 viewModel.login()
             },
-            onPasswordType = {
-                viewModel.onPasswordType(it)
+            onCodeType = {
+                viewModel.onCodeType(it)
             },
-            onUserNameType = {
-                viewModel.onUserNameType(it)
+            onPhoneNumberType = {
+                viewModel.onPhoneNumberType(it)
+            },
+            sendCode = {
+                viewModel.sendCode()
             }
         )
     }
