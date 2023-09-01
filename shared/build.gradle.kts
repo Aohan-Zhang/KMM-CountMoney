@@ -14,6 +14,8 @@ plugins {
 val ktorVersion = "2.3.3"
 val ktorfitVersion = "1.4.4"
 val sqlDelightVersion = "2.0.0"
+val dataStoreVersion = "1.1.0-alpha04"
+
 configure<KtorfitGradleConfiguration> {
     version = ktorfitVersion
 }
@@ -60,7 +62,9 @@ kotlin {
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
-
+                implementation("androidx.datastore:datastore-preferences-core:$dataStoreVersion")
+                implementation("androidx.datastore:datastore-core-okio:$dataStoreVersion")
+                implementation("co.touchlab:kermit:2.0.0-RC5")
 
             }
         }

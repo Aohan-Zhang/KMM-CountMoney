@@ -1,35 +1,24 @@
 package link.peipei.countmoney.workflow.home.event
 
 import cafe.adriel.voyager.core.model.ScreenModel
-import link.peipei.countmoney.data.EmployeeRepository
-import linkpeipeicountmoney.Employee
-import linkpeipeicountmoney.SalaryTimeLine
+import cafe.adriel.voyager.core.model.coroutineScope
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+import link.peipei.countmoney.data.UserManager
 
-class EventPageViewModel(private val employeeRepository: EmployeeRepository) : ScreenModel {
-    fun insert() {
-        employeeRepository.insertEmployeeAndSalary(
-            Employee(
-                -1,
-                "test",
-                "男",
-                "2011-1-1",
-                "122222222",
-                "厨师"
+class EventPageViewModel(
+    private val userManager: UserManager
+) : ScreenModel {
+    val isLogin = userManager.getLoggingStatusFlow()
+        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), false)
+    val userResponse = userManager.getUser()
+        .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), null)
 
-            ),
-            SalaryTimeLine(
-                -1,
-                -1,
-                "2011-1-1",
-                1000,
-                1000,
-                1000
-            )
-        )
+    fun logout(){
+        coroutineScope.launch {
+            userManager.logout()
+        }
+
     }
-
-    fun delete(){
-        employeeRepository.deleteEmployee(1)
-    }
-
 }

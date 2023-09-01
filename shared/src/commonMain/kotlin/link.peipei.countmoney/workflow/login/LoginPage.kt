@@ -6,7 +6,6 @@ import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -38,12 +36,9 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.launch
 import link.peipei.countmoney.core_ui.digitalListener
-import link.peipei.countmoney.core_ui.view.SendCodeButton
+import link.peipei.countmoney.core_ui.view.LoadingButton
 import link.peipei.countmoney.workflow.home.HomeScreen
-import org.jetbrains.compose.resources.ExperimentalResourceApi
-import org.jetbrains.compose.resources.painterResource
 
-@OptIn(ExperimentalResourceApi::class)
 @Composable
 fun LoginPage(
     loginUiState: LoginUiState,
@@ -100,6 +95,7 @@ fun LoginPage(
 
                 )
                 OutlinedTextField(
+                    enabled = !loginUiState.isPartlyLoading,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     value = loginUiState.phoneNumber,
                     onValueChange = { s ->
@@ -116,6 +112,7 @@ fun LoginPage(
                         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
                 ) {
                     OutlinedTextField(
+                        enabled = !loginUiState.isPartlyLoading,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f),
                         value = loginUiState.code,
@@ -126,8 +123,8 @@ fun LoginPage(
                         },
                         label = { Text("短信验证码") },
                     )
-                    SendCodeButton(
-                        test = if (loginUiState.sendCodeButtonCountDown == 0) {
+                    LoadingButton(
+                        text = if (loginUiState.sendCodeButtonCountDown == 0) {
                             "发送验证码"
                         } else {
                             "${loginUiState.sendCodeButtonCountDown}秒后重试"
@@ -138,22 +135,20 @@ fun LoginPage(
                         enable = loginUiState.sendCodeButtonEnable,
                         isLoading = loginUiState.sendCodeButtonIsLoading,
                     ) {
+                        focusManager.clearFocus()
                         sendCode()
                     }
                 }
 
-                Button(
-                    onClick = {
-                        onLoginClick()
-                    },
+                LoadingButton(
                     modifier = Modifier.fillMaxWidth().padding(16.dp),
-                    enabled = loginUiState.loginButtonEnable
+                    text = "登录",
+                    enable = loginUiState.loginButtonEnable,
+                    isLoading = loginUiState.isPartlyLoading
                 ) {
-                    Text("登录")
+                    focusManager.clearFocus()
+                    onLoginClick()
                 }
-            }
-            if (loginUiState.isPartlyLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center).size(64.dp))
             }
         }
     }

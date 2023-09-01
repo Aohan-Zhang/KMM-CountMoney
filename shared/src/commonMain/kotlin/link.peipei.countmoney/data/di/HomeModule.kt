@@ -1,15 +1,11 @@
 package link.peipei.countmoney.data.di
 
-import de.jensklingenberg.ktorfit.converter.builtin.CallConverterFactory
-import de.jensklingenberg.ktorfit.converter.builtin.FlowConverterFactory
-import de.jensklingenberg.ktorfit.ktorfit
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import dataStore
 import link.peipei.countmoney.data.EmployeeRepository
-import link.peipei.countmoney.data.api.CountingMoneyApi
-import link.peipei.countmoney.data.api.converter.ResultConverterFactory
+import link.peipei.countmoney.data.UserManager
+import link.peipei.countmoney.data.api.core.KtorInterceptor
+import link.peipei.countmoney.data.api.interceptor.AppInterceptor
+import link.peipei.countmoney.data.api.core.KtorfitFactory
 import link.peipei.countmoney.data.database.Database
 import link.peipei.countmoney.data.database.getDatabaseDriverFactory
 import link.peipei.countmoney.data.repository.AccountRepository
@@ -23,22 +19,19 @@ import org.kodein.di.instance
 
 val homeModule = DI {
     bindSingleton {
-        ktorfit {
-            baseUrl("https://api.peipei.link/")
-            httpClient(HttpClient {
-                install(ContentNegotiation) {
-                    json(Json { isLenient = true; ignoreUnknownKeys = true })
-                }
-            })
-            converterFactories(
-//                FlowConverterFactory(),
-//                CallConverterFactory(),
-                ResultConverterFactory()
-            )
-        }.create<CountingMoneyApi>()
+        dataStore()
+    }
+    bindSingleton {
+        UserManager(instance())
+    }
+    bindSingleton {
+        AppInterceptor(instance())
+    }
+    bindSingleton {
+        KtorfitFactory.create("https://api.peipei.link/", instance<AppInterceptor>())
     }
     bindProvider { getDatabaseDriverFactory() }
-    bindSingleton { AccountRepository(instance()) }
+    bindSingleton { AccountRepository(instance(), instance()) }
     bindSingleton { Database(instance()) }
     bindSingleton { instance<Database>().employeeDao }
     bindSingleton { instance<Database>().salaryTimeLineDao }

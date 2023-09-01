@@ -20,9 +20,9 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalResourceApi::class)
 @Composable
-fun SendCodeButton(
+fun LoadingButton(
     modifier: Modifier = Modifier,
-    test: String = "发送验证码",
+    text: String = "发送验证码",
     iconSource: String = "icons/ic_loading_small.xml",
     enable: Boolean = true,
     isLoading: Boolean = false,
@@ -53,6 +53,6 @@ fun SendCodeButton(
             )
             Spacer(Modifier.size(8.dp))
         }
-        Text(test)
+        Text(text)
     }
 }
