@@ -9,6 +9,7 @@ import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.di.homeModule
 import link.peipei.countmoney.theme.AppTheme
 import link.peipei.countmoney.workflow.login.LoginScreen
+import link.peipei.countmoney.workflow.store.StoreSelectionScreen
 import org.kodein.di.compose.rememberInstance
 import org.kodein.di.compose.withDI
 
@@ -19,7 +20,7 @@ fun App() {
         val isLogin by userManager.getLoggingStatusFlow().collectAsState(false)
         AppTheme {
             if (isLogin) {
-                Navigator(HomeScreen)
+                Navigator(StoreSelectionScreen)
             } else {
                 Navigator(LoginScreen)
             }
