@@ -62,7 +62,14 @@ import org.jetbrains.compose.resources.painterResource
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
 @Composable
-fun CreateStorePage() {
+fun CreateStorePage(
+    uiState: CreateStoreUiState,
+    onTitleInput: (String) -> Unit,
+    onIndustryInput: (String) -> Unit,
+    onScopeInput: (String) -> Unit,
+    onDesInput: (String) -> Unit,
+    onCreateClick: () -> Unit
+) {
     val navigator = LocalNavigator.currentOrThrow
 
     val permissionFactory: PermissionsControllerFactory = rememberPermissionsControllerFactory()
@@ -105,7 +112,7 @@ fun CreateStorePage() {
                 },
                 actions = {
                     TextButton({
-
+                        onCreateClick()
                     }) {
                         Text("创建", color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
                     }
@@ -169,21 +176,98 @@ fun CreateStorePage() {
 
             Spacer(Modifier.size(16.dp))
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
+                isError = uiState.title.showError,
+                supportingText = if (uiState.title.showError) {
+                    { Text(uiState.title.message) }
+                } else {
+                    null
+                },
+                value = uiState.title.content,
+                onValueChange = onTitleInput,
                 label = { Text("店铺名") },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    if (uiState.title.shouldShowCleanButton() && !uiState.underSubmit) {
+                        TrailingIcon {
+                            onTitleInput("")
+                        }
+                    }
+                }
             )
             Spacer(Modifier.size(16.dp))
             OutlinedTextField(
-                value = "",
-                onValueChange = {},
-                label = { Text("描述") },
-                modifier = Modifier.fillMaxWidth().height(160.dp)
+                isError = uiState.industry.showError,
+                supportingText = if (uiState.industry.showError) {
+                    { Text(uiState.industry.message) }
+                } else {
+                    null
+                },
+                value = uiState.industry.content,
+                onValueChange = onIndustryInput,
+                label = { Text("行业") },
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    if (uiState.industry.shouldShowCleanButton() && !uiState.underSubmit) {
+                        TrailingIcon {
+                            onTitleInput("")
+                        }
+                    }
+                }
             )
+            Spacer(Modifier.size(16.dp))
+            OutlinedTextField(
+                isError = uiState.scope.showError,
+                supportingText = if (uiState.scope.showError) {
+                    { Text(uiState.scope.message) }
+                } else {
+                    null
+                },
+                value = uiState.scope.content,
+                onValueChange = onScopeInput,
+                label = { Text("规模") },
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    if (uiState.scope.shouldShowCleanButton() && !uiState.underSubmit) {
+                        TrailingIcon {
+                            onTitleInput("")
+                        }
+                    }
+                }
+            )
+            Spacer(Modifier.size(16.dp))
+            Box(
+                modifier = Modifier.fillMaxWidth().height(160.dp),
+            ) {
+                OutlinedTextField(
+                    value = uiState.des.content,
+                    onValueChange = onDesInput,
+                    label = { Text("描述") },
+                    modifier = Modifier.fillMaxSize(),
+                )
+                Text(
+                    uiState.desIndicatorText,
+                    fontSize = 12.sp,
+                    modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp)
+                )
+            }
+
         }
 
     }
+}
+
+@OptIn(ExperimentalResourceApi::class)
+@Composable
+fun TrailingIcon(onClick: () -> Unit) {
+    val icon = painterResource("icons/ic_cancel_24.xml")
+    Icon(
+        icon,
+        null,
+        tint = MaterialTheme.colorScheme.primary,
+        modifier = Modifier.clickable {
+            onClick()
+        }
+    )
 }
 
 suspend fun selectImage(
