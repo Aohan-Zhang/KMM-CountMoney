@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,7 +14,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LargeFloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -29,8 +27,11 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.moriatsushi.insetsx.navigationBarsPadding
 import com.moriatsushi.insetsx.statusBarsPadding
+import link.peipei.countmoney.workflow.store.add.CreateStoreScreen
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -38,6 +39,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun StoreSelectionPage() {
     val snackbarHostState = remember { SnackbarHostState() }
+    val navigator = LocalNavigator.currentOrThrow
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -73,7 +75,7 @@ fun StoreSelectionPage() {
                             "选择你的门店，选择后可以在设置里面修改，第一次进入请创建或加入门店",
                             color = MaterialTheme.colorScheme.onTertiaryContainer,
                             fontSize = 14.sp
-                            )
+                        )
                     }
                 }
                 Column(modifier = Modifier.fillMaxWidth()) {
@@ -133,7 +135,7 @@ fun StoreSelectionPage() {
                     .navigationBarsPadding()
                     .padding(16.dp),
                 onClick = {
-                    //navigator?.push(AddEmployeeScreen())
+                    navigator.push(CreateStoreScreen)
                 },
             ) {
                 Icon(

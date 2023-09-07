@@ -1,0 +1,208 @@
+package link.peipei.countmoney.workflow.store.add
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.media.compose.BindMediaPickerEffect
+import dev.icerock.moko.media.compose.rememberMediaPickerControllerFactory
+import dev.icerock.moko.media.compose.toImageBitmap
+import dev.icerock.moko.media.picker.CanceledException
+import dev.icerock.moko.media.picker.MediaPickerController
+import dev.icerock.moko.media.picker.MediaSource
+import dev.icerock.moko.permissions.DeniedAlwaysException
+import dev.icerock.moko.permissions.DeniedException
+import dev.icerock.moko.permissions.Permission
+import dev.icerock.moko.permissions.PermissionsController
+import dev.icerock.moko.permissions.compose.BindEffect
+import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
+import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.ExperimentalResourceApi
+import org.jetbrains.compose.resources.painterResource
+
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalResourceApi::class)
+@Composable
+fun CreateStorePage() {
+    val navigator = LocalNavigator.currentOrThrow
+
+    val permissionFactory: PermissionsControllerFactory = rememberPermissionsControllerFactory()
+    val controller: PermissionsController =
+        remember(permissionFactory) { permissionFactory.createPermissionsController() }
+
+    val factory = rememberMediaPickerControllerFactory()
+    val picker = remember(factory) { factory.createMediaPickerController() }
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    var image: ImageBitmap? by remember { mutableStateOf(null) }
+
+    image?.let {
+        Image(bitmap = it, contentDescription = null)
+    }
+
+
+    BindEffect(controller)
+
+    BindMediaPickerEffect(picker)
+
+
+    val coroutineScope: CoroutineScope = rememberCoroutineScope()
+    Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
+        topBar = {
+            TopAppBar(
+                navigationIcon = {
+                    Icon(
+                        Icons.Filled.Close,
+                        contentDescription = "close page",
+                        modifier = Modifier.clip(RoundedCornerShape(32.dp)).clickable {
+                            navigator.pop()
+                        }.padding(16.dp)
+                    )
+                },
+                title = {
+                    Text(" 创建店铺")
+                },
+                actions = {
+                    TextButton({
+
+                    }) {
+                        Text("创建", color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
+                    }
+                }
+            )
+        }) {
+        Column(
+            modifier =
+            Modifier
+                .fillMaxSize()
+                .padding(it)
+                .verticalScroll(rememberScrollState())
+                .padding(24.dp)
+        ) {
+            Box(
+                modifier = Modifier
+                    .padding(start = 16.dp, end = 16.dp)
+                    .fillMaxWidth()
+                    .size(200.dp)
+                    .clip(
+                        RoundedCornerShape(64.dp)
+                    )
+                    .clickable {
+                        coroutineScope.launch {
+                            selectImage(controller, picker, snackbarHostState)?.let { photo ->
+                                image = photo
+                            }
+                        }
+                    }
+            ) {
+                if (image == null) {
+                    val painter = painterResource("pic/original_shop_illustration.jpg")
+                    Image(
+                        painter,
+                        null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                } else {
+                    Image(
+                        bitmap = image!!,
+                        null,
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+
+                if (image == null) {
+                    Box(
+                        modifier = Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.3f))
+                    )
+                    Text(
+                        "点击上传照片",
+                        modifier = Modifier.align(Alignment.Center),
+                        color = Color.White,
+                        fontSize = 16.sp
+                    )
+                }
+
+            }
+
+            Spacer(Modifier.size(16.dp))
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                label = { Text("店铺名") },
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(Modifier.size(16.dp))
+            OutlinedTextField(
+                value = "",
+                onValueChange = {},
+                label = { Text("描述") },
+                modifier = Modifier.fillMaxWidth().height(160.dp)
+            )
+        }
+
+    }
+}
+
+suspend fun selectImage(
+    controller: PermissionsController,
+    picker: MediaPickerController,
+    snackbarHostState: SnackbarHostState
+): ImageBitmap? {
+
+    return try {
+        controller.providePermission(Permission.GALLERY)
+        picker.pickImage(MediaSource.GALLERY).toImageBitmap()
+    } catch (e: DeniedAlwaysException) {
+        snackbarHostState.showSnackbar("我们需要您授权照片权限，以便选择照片。请在设置中手动打开权限")
+        null
+    } catch (e: DeniedException) {
+        snackbarHostState.showSnackbar("我们需要您授权照片权限，以便选择照片。")
+        null
+    } catch (e: CanceledException) {
+        null
+    }
+
+}

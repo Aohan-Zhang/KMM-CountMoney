@@ -65,7 +65,10 @@ kotlin {
                 implementation("androidx.datastore:datastore-preferences-core:$dataStoreVersion")
                 implementation("androidx.datastore:datastore-core-okio:$dataStoreVersion")
                 implementation("co.touchlab:kermit:2.0.0-RC5")
-
+                implementation("dev.icerock.moko:media:0.11.0")
+                implementation("dev.icerock.moko:media-compose:0.11.0")
+                implementation("dev.icerock.moko:permissions:0.16.0")
+                implementation("dev.icerock.moko:permissions-compose:0.16.0")
             }
         }
         val androidMain by getting {
