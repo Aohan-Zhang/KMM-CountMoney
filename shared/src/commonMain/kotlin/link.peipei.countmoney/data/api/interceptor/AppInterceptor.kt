@@ -37,7 +37,7 @@ class AppInterceptor(private val userManager: UserManager) : KtorInterceptor {
             if (originalCall.response.status.value==401){
                 userManager.logout()
             }
-            throw HttpException(401, "tokon is null")
+            throw HttpException(originalCall.response.status.value, "error")
         }
         return originalCall
     }

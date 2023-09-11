@@ -1,4 +1,4 @@
-package link.peipei.countmoney.workflow.store
+package link.peipei.countmoney.workflow.store.list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box

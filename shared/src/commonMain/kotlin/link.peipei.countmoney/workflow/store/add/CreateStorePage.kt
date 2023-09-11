@@ -3,6 +3,7 @@ package link.peipei.countmoney.workflow.store.add
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -13,9 +14,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,9 +39,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -56,7 +63,11 @@ import dev.icerock.moko.permissions.compose.BindEffect
 import dev.icerock.moko.permissions.compose.PermissionsControllerFactory
 import dev.icerock.moko.permissions.compose.rememberPermissionsControllerFactory
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import link.peipei.countmoney.core_ui.view.LoadingButton
+import link.peipei.countmoney.core_ui.view.TextLoadingButton
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 
@@ -64,6 +75,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun CreateStorePage(
     uiState: CreateStoreUiState,
+    createEvent: SharedFlow<Boolean>,
     onTitleInput: (String) -> Unit,
     onIndustryInput: (String) -> Unit,
     onScopeInput: (String) -> Unit,
@@ -83,18 +95,37 @@ fun CreateStorePage(
 
     var image: ImageBitmap? by remember { mutableStateOf(null) }
 
+    val focusManager: FocusManager = LocalFocusManager.current
+
+
     image?.let {
         Image(bitmap = it, contentDescription = null)
     }
+    val interactionSource = remember { MutableInteractionSource() }
 
 
     BindEffect(controller)
 
     BindMediaPickerEffect(picker)
 
+    LaunchedEffect(createEvent) {
+        createEvent.collectLatest {
+            if (it) {
+                navigator.pop()
+            } else {
+                snackbarHostState.showSnackbar("创建失败，请重试")
+            }
+        }
+    }
 
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
     Scaffold(
+        modifier = Modifier.clickable(
+            interactionSource = interactionSource,
+            indication = null
+        ) {
+            focusManager.clearFocus()
+        },
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -111,10 +142,12 @@ fun CreateStorePage(
                     Text(" 创建店铺")
                 },
                 actions = {
-                    TextButton({
+                    TextLoadingButton(
+                        text = "创建店铺",
+                        isLoading = uiState.isLoading,
+                        enable = !uiState.isLoading
+                    ) {
                         onCreateClick()
-                    }) {
-                        Text("创建", color = MaterialTheme.colorScheme.primary, fontSize = 14.sp)
                     }
                 }
             )
@@ -216,6 +249,7 @@ fun CreateStorePage(
             )
             Spacer(Modifier.size(16.dp))
             OutlinedTextField(
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isError = uiState.scope.showError,
                 supportingText = if (uiState.scope.showError) {
                     { Text(uiState.scope.message) }

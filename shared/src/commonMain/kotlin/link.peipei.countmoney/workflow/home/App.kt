@@ -1,7 +1,6 @@
 package link.peipei.countmoney.workflow.home
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.Navigator
@@ -9,7 +8,7 @@ import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.di.homeModule
 import link.peipei.countmoney.theme.AppTheme
 import link.peipei.countmoney.workflow.login.LoginScreen
-import link.peipei.countmoney.workflow.store.StoreSelectionScreen
+import link.peipei.countmoney.workflow.store.list.StoreSelectionScreen
 import org.kodein.di.compose.rememberInstance
 import org.kodein.di.compose.withDI
 

@@ -9,7 +9,8 @@ data class CreateStoreUiState(
     val industry: TextFieldContent = TextFieldContent(),
     val des: TextFieldContent = TextFieldContent(),
     val scope: TextFieldContent = TextFieldContent(),
-    val desIndicatorText: String = "0/$MAX_DES_LENGTH"
+    val desIndicatorText: String = "0/$MAX_DES_LENGTH",
+    val isLoading: Boolean = false
 
 )
 

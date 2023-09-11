@@ -9,6 +9,7 @@ import link.peipei.countmoney.data.api.core.KtorfitFactory
 import link.peipei.countmoney.data.database.Database
 import link.peipei.countmoney.data.database.getDatabaseDriverFactory
 import link.peipei.countmoney.data.repository.AccountRepository
+import link.peipei.countmoney.data.repository.StoreRepository
 import link.peipei.countmoney.workflow.home.event.EventPageViewModel
 import link.peipei.countmoney.workflow.home.record.RecordPageViewModel
 import link.peipei.countmoney.workflow.login.LoginViewModel
@@ -38,8 +39,9 @@ val homeModule = DI {
     bindSingleton { instance<Database>().employeeDao }
     bindSingleton { instance<Database>().salaryTimeLineDao }
     bindSingleton { EmployeeRepository(instance(), instance()) }
+    bindSingleton { StoreRepository(instance()) }
     bindProvider { EventPageViewModel(instance()) }
     bindProvider { RecordPageViewModel(instance()) }
     bindProvider { LoginViewModel(instance()) }
-    bindProvider { CreateStoreViewModel() }
+    bindProvider { CreateStoreViewModel(instance()) }
 }

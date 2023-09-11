@@ -13,6 +13,7 @@ object CreateStoreScreen : Screen {
         val uiState by viewModel.uiState.collectAsState()
         CreateStorePage(
             uiState,
+            viewModel.onCreateStoreEvent,
             onTitleInput = viewModel::updateTitle,
             onIndustryInput = viewModel::updateIndustry,
             onScopeInput = viewModel::updateScope,
