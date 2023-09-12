@@ -29,7 +29,7 @@ interface CountingMoneyApi {
     suspend fun createStore(@Body body: StoreRequest): StoreResponse
 
     @Headers("Content-Type:application/json")
-    @POST("stores")
+    @GET("stores")
     suspend fun getStores(): List<StoreResponse>
 
     @Headers("Content-Type:application/json")

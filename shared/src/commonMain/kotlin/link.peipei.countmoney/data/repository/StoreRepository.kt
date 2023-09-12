@@ -4,13 +4,18 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.api.CountingMoneyApi
 import link.peipei.countmoney.data.entities.StoreRequest
 import link.peipei.countmoney.data.entities.StoreResponse
 
-class StoreRepository(private val api: CountingMoneyApi) {
+class StoreRepository(private val api: CountingMoneyApi, private val userManager: UserManager) {
 
     private val storeListFlow = MutableStateFlow(listOf<StoreResponse>())
+
+    suspend fun changeUserCurrentStore(pos: Int) {
+        userManager.updateCurrentUserStore(storeListFlow.value[pos].id)
+    }
 
     fun getStoreListFLow(): Flow<List<StoreResponse>> {
         return storeListFlow.asStateFlow()
@@ -44,6 +49,12 @@ class StoreRepository(private val api: CountingMoneyApi) {
             result
         } catch (e: Exception) {
             null
+        }
+    }
+
+    fun clean() {
+        storeListFlow.update {
+            listOf()
         }
     }
 

@@ -17,9 +17,14 @@ fun App() {
     withDI(homeModule) {
         val userManager by rememberInstance<UserManager>()
         val isLogin by userManager.getLoggingStatusFlow().collectAsState(false)
+        val currentStoreId by userManager.getUserStore().collectAsState(null)
         AppTheme {
             if (isLogin) {
-                Navigator(StoreSelectionScreen)
+                if (currentStoreId == null) {
+                    Navigator(StoreSelectionScreen())
+                } else {
+                    Navigator(HomeScreen)
+                }
             } else {
                 Navigator(LoginScreen)
             }

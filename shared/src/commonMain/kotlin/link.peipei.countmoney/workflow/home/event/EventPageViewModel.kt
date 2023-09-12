@@ -6,9 +6,11 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import link.peipei.countmoney.data.UserManager
+import link.peipei.countmoney.data.repository.StoreRepository
 
 class EventPageViewModel(
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val repository: StoreRepository
 ) : ScreenModel {
     val isLogin = userManager.getLoggingStatusFlow()
         .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), false)
@@ -17,7 +19,9 @@ class EventPageViewModel(
 
     fun logout(){
         coroutineScope.launch {
+            repository.clean()
             userManager.logout()
+
         }
 
     }

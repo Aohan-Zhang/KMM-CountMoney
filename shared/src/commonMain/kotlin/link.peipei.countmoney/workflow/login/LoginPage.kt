@@ -56,7 +56,6 @@ fun LoginPage(
     onCodeType: (String) -> Unit,
     sendCode: () -> Unit
 ) {
-    val navigator = LocalNavigator.currentOrThrow
     val scope = rememberCoroutineScope()
     val focusManager: FocusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -64,9 +63,7 @@ fun LoginPage(
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(loginResult) {
         loginResult.collect {
-            if (it) {
-                navigator.replace(StoreSelectionScreen)
-            } else {
+            if (!it) {
                 scope.launch {
                     snackbarHostState.showSnackbar("网络出问题了，请重试")
                 }

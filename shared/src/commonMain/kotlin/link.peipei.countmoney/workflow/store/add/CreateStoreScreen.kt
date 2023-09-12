@@ -6,7 +6,7 @@ import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.kodein.rememberScreenModel
 
-object CreateStoreScreen : Screen {
+class CreateStoreScreen : Screen {
     @Composable
     override fun Content() {
         val viewModel = rememberScreenModel<CreateStoreViewModel>()

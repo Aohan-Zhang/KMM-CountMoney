@@ -6,7 +6,7 @@ data class StoreSelectionUiState(
 )
 
 data class StoreSelectionLoadingState(
-    val isLoading: Boolean = false,
+    val isLoading: Boolean = true,
     val isError: Boolean = false,
 )
 

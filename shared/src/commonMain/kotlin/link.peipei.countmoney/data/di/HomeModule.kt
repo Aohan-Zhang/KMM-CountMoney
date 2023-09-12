@@ -15,6 +15,7 @@ import link.peipei.countmoney.workflow.home.record.RecordPageViewModel
 import link.peipei.countmoney.workflow.login.LoginViewModel
 import link.peipei.countmoney.workflow.store.add.CreateStorePage
 import link.peipei.countmoney.workflow.store.add.CreateStoreViewModel
+import link.peipei.countmoney.workflow.store.list.StoreSelectionViewModel
 import org.kodein.di.DI
 import org.kodein.di.bindProvider
 import org.kodein.di.bindSingleton
@@ -39,9 +40,10 @@ val homeModule = DI {
     bindSingleton { instance<Database>().employeeDao }
     bindSingleton { instance<Database>().salaryTimeLineDao }
     bindSingleton { EmployeeRepository(instance(), instance()) }
-    bindSingleton { StoreRepository(instance()) }
-    bindProvider { EventPageViewModel(instance()) }
+    bindSingleton { StoreRepository(instance(), instance()) }
+    bindProvider { EventPageViewModel(instance(), instance()) }
     bindProvider { RecordPageViewModel(instance()) }
     bindProvider { LoginViewModel(instance()) }
     bindProvider { CreateStoreViewModel(instance()) }
+    bindProvider { StoreSelectionViewModel(instance()) }
 }

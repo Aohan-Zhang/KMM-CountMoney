@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.layout.ContentScale
@@ -208,6 +209,7 @@ fun CreateStorePage(
             }
 
             Spacer(Modifier.size(16.dp))
+            var isTitleTextFieldFocused by remember { mutableStateOf(false) }
             OutlinedTextField(
                 isError = uiState.title.showError,
                 supportingText = if (uiState.title.showError) {
@@ -218,9 +220,10 @@ fun CreateStorePage(
                 value = uiState.title.content,
                 onValueChange = onTitleInput,
                 label = { Text("店铺名") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth()
+                    .onFocusChanged { isTitleTextFieldFocused = it.isFocused },
                 trailingIcon = {
-                    if (uiState.title.shouldShowCleanButton() && !uiState.underSubmit) {
+                    if (uiState.title.shouldShowCleanButton() && !uiState.underSubmit && isTitleTextFieldFocused) {
                         TrailingIcon {
                             onTitleInput("")
                         }
@@ -228,6 +231,7 @@ fun CreateStorePage(
                 }
             )
             Spacer(Modifier.size(16.dp))
+            var isIndustryTextFieldFocused by remember { mutableStateOf(false) }
             OutlinedTextField(
                 isError = uiState.industry.showError,
                 supportingText = if (uiState.industry.showError) {
@@ -238,9 +242,13 @@ fun CreateStorePage(
                 value = uiState.industry.content,
                 onValueChange = onIndustryInput,
                 label = { Text("行业") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged {
+                        isIndustryTextFieldFocused = it.isFocused
+                    },
                 trailingIcon = {
-                    if (uiState.industry.shouldShowCleanButton() && !uiState.underSubmit) {
+                    if (uiState.industry.shouldShowCleanButton() && !uiState.underSubmit && isIndustryTextFieldFocused) {
                         TrailingIcon {
                             onTitleInput("")
                         }
@@ -248,6 +256,7 @@ fun CreateStorePage(
                 }
             )
             Spacer(Modifier.size(16.dp))
+            var isScopeTextFieldFocused by remember { mutableStateOf(false) }
             OutlinedTextField(
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 isError = uiState.scope.showError,
@@ -259,9 +268,13 @@ fun CreateStorePage(
                 value = uiState.scope.content,
                 onValueChange = onScopeInput,
                 label = { Text("规模") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .onFocusChanged {
+                        isScopeTextFieldFocused = it.isFocused
+                    },
                 trailingIcon = {
-                    if (uiState.scope.shouldShowCleanButton() && !uiState.underSubmit) {
+                    if (uiState.scope.shouldShowCleanButton() && !uiState.underSubmit && isScopeTextFieldFocused) {
                         TrailingIcon {
                             onTitleInput("")
                         }

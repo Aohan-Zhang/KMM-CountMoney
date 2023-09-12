@@ -22,10 +22,15 @@ class UserManager(private val dataStore: DataStore<Preferences>) {
         val USER_PICTURE_KEY = stringPreferencesKey("USER_PICTURE_KEY")
         val USER_PHONE_KEY = stringPreferencesKey("USER_PHONE_KEY")
         val USER_TOKEN_KEY = stringPreferencesKey("USER_TOKEN_KEY")
+        val USER_STORE_ID_KEY = stringPreferencesKey("USER_STORE_KEY")
     }
 
     fun getLoggingStatusFlow() = dataStore.data.map {
         it[USER_USERID_KEY] != null
+    }
+
+    fun getUserStore() = dataStore.data.map {
+        it[USER_STORE_ID_KEY]
     }
 
     fun getUser(): Flow<UserResponse> {
@@ -48,6 +53,13 @@ class UserManager(private val dataStore: DataStore<Preferences>) {
     suspend fun getAccessToken(): String? {
         val data = dataStore.data.firstOrNull()
         return data?.get(USER_TOKEN_KEY)
+    }
+
+
+    suspend fun updateCurrentUserStore(storeId: String) {
+        dataStore.edit {
+            it[USER_STORE_ID_KEY] = storeId
+        }
     }
 
     suspend fun updateUser(userResponse: UserResponse, tokenItem: TokenItem) {

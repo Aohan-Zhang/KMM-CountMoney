@@ -1,8 +1,8 @@
 package link.peipei.countmoney.workflow.store.list
 
-import androidx.compose.runtime.collectAsState
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -31,10 +31,20 @@ class StoreSelectionViewModel(private val storeRepository: StoreRepository) : Sc
     )
 
     init {
+        refresh()
+    }
+
+    fun onStoreSelected(pos: Int) {
         coroutineScope.launch {
-            loadingUiState.update {
-                it.copy(isLoading = true)
-            }
+            storeRepository.changeUserCurrentStore(pos)
+        }
+    }
+
+    fun refresh() {
+        loadingUiState.update {
+            it.copy(isLoading = true, isError = false)
+        }
+        coroutineScope.launch {
             val result = storeRepository.refreshStoreList()
             loadingUiState.update {
                 it.copy(isLoading = false)
