@@ -5,7 +5,7 @@ plugins {
     kotlin("native.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
-    id("com.google.devtools.ksp") version "1.9.0-1.0.12"
+    id("com.google.devtools.ksp") version "1.9.10-1.0.13"
     id("de.jensklingenberg.ktorfit") version "1.0.0"
     id("app.cash.sqldelight")
     id("kotlinx-serialization")
@@ -36,8 +36,6 @@ kotlin {
             baseName = "shared"
             isStatic = true
         }
-        extraSpecAttributes["resources"] =
-            "['src/commonMain/resources/**', 'src/iosMain/resources/**']"
     }
 
     sourceSets {
@@ -57,8 +55,6 @@ kotlin {
                 implementation("com.moriatsushi.insetsx:insetsx:0.1.0-alpha10")
                 implementation("de.jensklingenberg.ktorfit:ktorfit-lib:$ktorfitVersion")
                 implementation("org.kodein.di:kodein-di-framework-compose:7.20.1")
-                implementation("app.cash.sqldelight:runtime:$sqlDelightVersion")
-                implementation("app.cash.sqldelight:coroutines-extensions:$sqlDelightVersion")
                 implementation("io.ktor:ktor-client-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
@@ -75,8 +71,7 @@ kotlin {
             dependencies {
                 api("androidx.activity:activity-compose:1.7.2")
                 api("androidx.appcompat:appcompat:1.6.1")
-                api("androidx.core:core-ktx:1.10.1")
-                implementation("app.cash.sqldelight:android-driver:$sqlDelightVersion")
+                api("androidx.core:core-ktx:1.12.0")
             }
         }
         val iosArm64Main by getting
@@ -85,9 +80,7 @@ kotlin {
             dependsOn(commonMain)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-                implementation("app.cash.sqldelight:native-driver:$sqlDelightVersion")
-            }
+
         }
     }
 }
