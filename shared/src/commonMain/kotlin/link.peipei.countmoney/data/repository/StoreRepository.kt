@@ -1,5 +1,12 @@
 package link.peipei.countmoney.data.repository
 
+import co.touchlab.kermit.Logger
+import io.ktor.client.request.forms.MultiPartFormDataContent
+import io.ktor.client.request.forms.formData
+import io.ktor.http.Headers
+import io.ktor.http.HttpHeaders
+import io.ktor.utils.io.core.buildPacket
+import io.ktor.utils.io.core.writeFully
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -38,16 +45,37 @@ class StoreRepository(private val api: CountingMoneyApi, private val userManager
         des: String,
         scale: Int,
         industry: String,
-        imageUrl: String?
+        byteArray: ByteArray?
     ): StoreResponse? {
         return try {
-            val storeRequest = StoreRequest(name, des, imageUrl, scale, industry)
+            val storeRequest = if (byteArray != null) {
+                val body = MultiPartFormDataContent(
+                    formData {
+                        appendInput(
+                            key = "file",
+                            Headers.build {
+                                append(HttpHeaders.ContentDisposition, "filename=\"*\"")
+                            }
+                        ) {
+                            buildPacket { writeFully(byteArray) }
+                        }
+                    },
+                )
+                val pathname = api.uploadImage(body).pathname
+                StoreRequest(name, des, pathname, scale, industry)
+
+            } else {
+                StoreRequest(name, des, null, scale, industry)
+
+            }
+
             val result = api.createStore(storeRequest)
             storeListFlow.update {
                 it + result
             }
             result
         } catch (e: Exception) {
+            Logger.e(e.message.toString())
             null
         }
     }

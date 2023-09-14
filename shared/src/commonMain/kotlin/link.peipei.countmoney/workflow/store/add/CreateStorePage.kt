@@ -18,7 +18,6 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -27,7 +26,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -50,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
+import dev.icerock.moko.media.Bitmap
 import dev.icerock.moko.media.compose.BindMediaPickerEffect
 import dev.icerock.moko.media.compose.rememberMediaPickerControllerFactory
 import dev.icerock.moko.media.compose.toImageBitmap
@@ -67,7 +66,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import link.peipei.countmoney.core_ui.view.LoadingButton
 import link.peipei.countmoney.core_ui.view.TextLoadingButton
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -81,7 +79,7 @@ fun CreateStorePage(
     onIndustryInput: (String) -> Unit,
     onScopeInput: (String) -> Unit,
     onDesInput: (String) -> Unit,
-    onCreateClick: () -> Unit
+    onCreateClick: (ByteArray?) -> Unit
 ) {
     val navigator = LocalNavigator.currentOrThrow
 
@@ -94,14 +92,10 @@ fun CreateStorePage(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    var image: ImageBitmap? by remember { mutableStateOf(null) }
+    var image: Bitmap? by remember { mutableStateOf(null) }
 
     val focusManager: FocusManager = LocalFocusManager.current
 
-
-    image?.let {
-        Image(bitmap = it, contentDescription = null)
-    }
     val interactionSource = remember { MutableInteractionSource() }
 
 
@@ -148,7 +142,7 @@ fun CreateStorePage(
                         isLoading = uiState.isLoading,
                         enable = !uiState.isLoading
                     ) {
-                        onCreateClick()
+                        onCreateClick(image?.toByteArray())
                     }
                 }
             )
@@ -187,7 +181,7 @@ fun CreateStorePage(
                     )
                 } else {
                     Image(
-                        bitmap = image!!,
+                        bitmap = image!!.toImageBitmap(),
                         null,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier.fillMaxSize()
@@ -321,11 +315,11 @@ suspend fun selectImage(
     controller: PermissionsController,
     picker: MediaPickerController,
     snackbarHostState: SnackbarHostState
-): ImageBitmap? {
+): Bitmap? {
 
     return try {
         controller.providePermission(Permission.GALLERY)
-        picker.pickImage(MediaSource.GALLERY).toImageBitmap()
+        picker.pickImage(MediaSource.GALLERY)
     } catch (e: DeniedAlwaysException) {
         snackbarHostState.showSnackbar("我们需要您授权照片权限，以便选择照片。请在设置中手动打开权限")
         null

@@ -11,8 +11,11 @@ import androidx.compose.foundation.gestures.rememberTransformableState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -50,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import co.touchlab.kermit.Logger
+import com.moriatsushi.insetsx.navigationBars
 import com.moriatsushi.insetsx.navigationBarsPadding
 import com.moriatsushi.insetsx.statusBarsPadding
 import link.peipei.countmoney.workflow.home.HomeScreen
@@ -91,7 +95,7 @@ fun StoreSelectionPage(
         }
     ) {
         Box(
-            modifier = Modifier.padding(it).fillMaxSize()
+            modifier = Modifier.padding(top = it.calculateTopPadding()).fillMaxSize()
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             if (uiState.storeSelectionLoadingState.isLoading) {
@@ -109,9 +113,12 @@ fun StoreSelectionPage(
                 }
             } else {
                 LazyColumn(
+                    contentPadding = PaddingValues(
+                        top = 24.dp,
+                        bottom = (WindowInsets.navigationBars.asPaddingValues()
+                            .calculateBottomPadding() + 24.dp)
+                    ),
                     modifier = Modifier
-                        .align(Alignment.TopStart)
-                        .statusBarsPadding()
                         .padding(start = 24.dp, end = 24.dp),
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
@@ -122,8 +129,7 @@ fun StoreSelectionPage(
                                 .fillMaxWidth()
                                 .background(MaterialTheme.colorScheme.tertiaryContainer)
                                 .padding(24.dp),
-
-                            ) {
+                        ) {
                             Row(modifier = Modifier.fillMaxWidth()) {
                                 val icon = painterResource("icons/ic_lightbulb_fill_24.xml")
                                 Icon(

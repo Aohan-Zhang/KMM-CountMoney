@@ -45,7 +45,7 @@ class CreateStoreViewModel(private val repository: StoreRepository) : ScreenMode
         }
     }
 
-    fun create() {
+    fun create(byteArray: ByteArray?) {
         validateData {
             val uiState = _uiState.value
             coroutineScope.launch {
@@ -57,7 +57,7 @@ class CreateStoreViewModel(private val repository: StoreRepository) : ScreenMode
                     uiState.des.content,
                     uiState.scope.content.toInt(),
                     uiState.industry.content,
-                    null
+                    byteArray
                 )
                 _uiState.update {
                     it.copy(isLoading = false)
