@@ -30,6 +30,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
 import link.peipei.countmoney.workflow.add.AddEmployeeScreen
 import link.peipei.countmoney.workflow.home.record.employee.EmployeePage
+import link.peipei.countmoney.workflow.home.record.employee.EmployeeUiState
 import link.peipei.countmoney.workflow.home.record.goods.GoodsPage
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -44,7 +45,7 @@ data class RecordPageTabs(
     ExperimentalResourceApi::class, ExperimentalFoundationApi::class
 )
 @Composable
-fun RecordPage(recordPageViewModel: RecordPageViewModel) {
+fun RecordPage(employeeUiState: EmployeeUiState) {
     val navigator = LocalNavigator.currentOrThrow.parent
 
     val pagerState = rememberPagerState {
@@ -104,7 +105,7 @@ fun RecordPage(recordPageViewModel: RecordPageViewModel) {
                     }
 
                     1 -> {
-                        EmployeePage()
+                        EmployeePage(employeeUiState)
                     }
                 }
             }

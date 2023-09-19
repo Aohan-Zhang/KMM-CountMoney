@@ -6,6 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun EmployeePage() {
-    Text("aaaaaa",Modifier.fillMaxSize())
+fun EmployeePage(uiState: EmployeeUiState) {
+    Text(uiState.toString(), Modifier.fillMaxSize())
 }

@@ -1,5 +1,6 @@
 package link.peipei.countmoney.data.api.interceptor
 
+import co.touchlab.kermit.Logger
 import io.ktor.client.call.HttpClientCall
 import io.ktor.client.plugins.Sender
 import io.ktor.client.request.HttpRequestBuilder
@@ -32,7 +33,7 @@ class AppInterceptor(private val userManager: UserManager) : KtorInterceptor {
                 "Authorization", "Bearer $token"
             )
         }
-        val originalCall = sender.execute(httpRequestBuilder)
+       val originalCall = sender.execute(httpRequestBuilder)
         if (originalCall.response.status.value != 200) {
             if (originalCall.response.status.value==401){
                 userManager.logout()

@@ -4,6 +4,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import cafe.adriel.voyager.kodein.rememberScreenModel
@@ -16,7 +18,9 @@ import org.jetbrains.compose.resources.painterResource
 internal object RecordPageTab : Tab {
     @Composable
     override fun Content() {
-        RecordPage(rememberScreenModel())
+        val viewModel = rememberScreenModel<RecordPageViewModel>()
+        val employeeUiState by viewModel.uiState.collectAsState()
+        RecordPage(employeeUiState)
     }
 
     @OptIn(ExperimentalResourceApi::class)
