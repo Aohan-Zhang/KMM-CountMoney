@@ -13,6 +13,7 @@ import io.ktor.http.content.PartData
 import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.LOGIN_PATH
 import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.SEND_SMS_PATH
 import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.USER_PATH
+import link.peipei.countmoney.data.entities.CreateEmployRequest
 import link.peipei.countmoney.data.entities.EmployEntity
 import link.peipei.countmoney.data.entities.LoginRequestBody
 import link.peipei.countmoney.data.entities.SendSmsRequestBody
@@ -44,6 +45,12 @@ interface CountingMoneyApi {
     suspend fun getEmployee(
         @Query("storeId") storeId: String
     ): List<EmployEntity>
+
+    @Headers("Content-Type:application/json")
+    @POST("employee")
+    suspend fun addEmploy(
+        @Body createEmployRequest: CreateEmployRequest
+    ): EmployEntity
 
     @Headers("Content-Type:application/json")
     @GET(USER_PATH)

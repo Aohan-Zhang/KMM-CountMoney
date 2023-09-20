@@ -1,10 +1,13 @@
 package link.peipei.countmoney.workflow.home.record.employee
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -30,7 +33,16 @@ fun EmployeePage(uiState: EmployeeUiState, onRetryClick: () -> Unit) {
                 Text("重试")
             }
         } else {
-            Text(uiState.toString(), Modifier.fillMaxSize())
+            LazyColumn(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                item {
+
+                }
+                items(uiState.employee) {
+                    EmployItem(it.name, it.position)
+                }
+            }
         }
     }
 
