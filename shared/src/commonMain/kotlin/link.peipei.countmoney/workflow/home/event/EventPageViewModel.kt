@@ -2,6 +2,7 @@ package link.peipei.countmoney.workflow.home.event
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -17,6 +18,9 @@ class EventPageViewModel(
     val userResponse = userManager.getUser()
         .stateIn(coroutineScope, SharingStarted.WhileSubscribed(5000), null)
 
+    init {
+        Logger.d("bubububu")
+    }
     fun logout(){
         coroutineScope.launch {
             repository.clean()

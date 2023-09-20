@@ -29,6 +29,7 @@ import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
 import link.peipei.countmoney.workflow.add.AddEmployeeScreen
+import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 import link.peipei.countmoney.workflow.home.record.employee.EmployeePage
 import link.peipei.countmoney.workflow.home.record.employee.EmployeeUiState
 import link.peipei.countmoney.workflow.home.record.goods.GoodsPage
@@ -45,8 +46,8 @@ data class RecordPageTabs(
     ExperimentalResourceApi::class, ExperimentalFoundationApi::class
 )
 @Composable
-fun RecordPage(employeeUiState: EmployeeUiState) {
-    val navigator = LocalNavigator.currentOrThrow.parent
+fun RecordPage(employeeUiState: EmployeeUiState, onRetryClick: () -> Unit) {
+    val navigator = LocalGlobalNavigator.currentOrThrow
 
     val pagerState = rememberPagerState {
         2
@@ -105,14 +106,14 @@ fun RecordPage(employeeUiState: EmployeeUiState) {
                     }
 
                     1 -> {
-                        EmployeePage(employeeUiState)
+                        EmployeePage(employeeUiState, onRetryClick)
                     }
                 }
             }
             FloatingActionButton(
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
                 onClick = {
-                    navigator?.push(AddEmployeeScreen())
+                    navigator.push(AddEmployeeScreen())
                 },
             ) {
                 Icon(

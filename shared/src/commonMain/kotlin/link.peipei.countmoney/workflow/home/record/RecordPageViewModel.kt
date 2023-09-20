@@ -2,6 +2,7 @@ package link.peipei.countmoney.workflow.home.record
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
+import co.touchlab.kermit.Logger
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
@@ -30,6 +31,11 @@ class RecordPageViewModel(private val repository: EmployRepository) : ScreenMode
 
 
     init {
+        Logger.d("走走走走")
+        refresh()
+    }
+
+    fun refresh() {
         coroutineScope.launch {
             _loadingUiState.update {
                 it.copy(isLoading = true)

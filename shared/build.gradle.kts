@@ -41,7 +41,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                val voyagerVersion = "1.0.0-rc06"
+                val voyagerVersion = "1.0.0-rc07"
                 implementation("cafe.adriel.voyager:voyager-kodein:$voyagerVersion")
                 implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
                 implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.Navigator
+import co.touchlab.kermit.Logger
 import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.di.homeModule
 import link.peipei.countmoney.theme.AppTheme
