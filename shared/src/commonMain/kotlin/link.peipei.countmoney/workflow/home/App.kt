@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import co.touchlab.kermit.Logger
 import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.di.homeModule
@@ -24,7 +25,10 @@ fun App() {
                 if (currentStoreId == null) {
                     Navigator(StoreSelectionScreen())
                 } else {
-                    Navigator(HomeScreen)
+                    Navigator(
+                        HomeScreen,
+                        disposeBehavior = NavigatorDisposeBehavior(disposeNestedNavigators = false)
+                    )
                 }
             } else {
                 Navigator(LoginScreen)
