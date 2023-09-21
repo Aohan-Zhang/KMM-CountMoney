@@ -15,7 +15,6 @@ import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 fun EventPage(eventPageViewModel: EventPageViewModel, modifier: Modifier = Modifier) {
     val isLogging by eventPageViewModel.isLogin.collectAsState()
     val userResponse by eventPageViewModel.userResponse.collectAsState()
-    val navigator = LocalGlobalNavigator.currentOrThrow
     Column {
         Text(text = isLogging.toString())
 
@@ -24,12 +23,6 @@ fun EventPage(eventPageViewModel: EventPageViewModel, modifier: Modifier = Modif
             eventPageViewModel.logout()
         }) {
             Text(text = "登出")
-        }
-
-        Button(onClick = {
-            navigator.push(AddEmployeeScreen())
-        }) {
-            Text(text = "测试")
         }
     }
 

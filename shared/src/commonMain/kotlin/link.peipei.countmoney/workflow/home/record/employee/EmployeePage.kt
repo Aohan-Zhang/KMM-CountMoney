@@ -15,9 +15,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.navigator.currentOrThrow
+import link.peipei.countmoney.workflow.add.AddEmployeeScreen
+import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 
 @Composable
 fun EmployeePage(uiState: EmployeeUiState, onRetryClick: () -> Unit) {
+    val navigator = LocalGlobalNavigator.currentOrThrow
     Box(modifier = Modifier.fillMaxSize()) {
         if (uiState.employeeLoadingState.isLoading) {
             CircularProgressIndicator(Modifier.align(Alignment.Center).size(32.dp).clickable {
@@ -40,7 +44,9 @@ fun EmployeePage(uiState: EmployeeUiState, onRetryClick: () -> Unit) {
 
                 }
                 items(uiState.employee) {
-                    EmployItem(it.name, it.position)
+                    EmployItem(it.employ.name, it.employ.position){
+                        navigator.push(AddEmployeeScreen(it))
+                    }
                 }
             }
         }

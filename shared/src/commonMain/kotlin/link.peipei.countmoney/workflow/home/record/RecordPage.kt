@@ -28,6 +28,8 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
+import link.peipei.countmoney.data.entities.EmployEntity
+import link.peipei.countmoney.data.entities.EmployWithSalary
 import link.peipei.countmoney.workflow.add.AddEmployeeScreen
 import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 import link.peipei.countmoney.workflow.home.record.employee.EmployeePage
@@ -113,7 +115,7 @@ fun RecordPage(employeeUiState: EmployeeUiState, onRetryClick: () -> Unit) {
             FloatingActionButton(
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
                 onClick = {
-                    navigator.push(AddEmployeeScreen())
+                    navigator.push(AddEmployeeScreen(EmployWithSalary.empty()))
                 },
             ) {
                 Icon(

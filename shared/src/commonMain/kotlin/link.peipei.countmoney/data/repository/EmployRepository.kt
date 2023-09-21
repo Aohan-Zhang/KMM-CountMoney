@@ -9,9 +9,10 @@ import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.api.CountingMoneyApi
 import link.peipei.countmoney.data.entities.CreateEmployRequest
 import link.peipei.countmoney.data.entities.EmployEntity
+import link.peipei.countmoney.data.entities.EmployWithSalary
 
 class EmployRepository(private val api: CountingMoneyApi, private val userManager: UserManager) {
-    private val employeeFlow = MutableStateFlow(listOf<EmployEntity>())
+    private val employeeFlow = MutableStateFlow(listOf<EmployWithSalary>())
 
     fun getEmployeeFlow() = employeeFlow.asStateFlow()
 

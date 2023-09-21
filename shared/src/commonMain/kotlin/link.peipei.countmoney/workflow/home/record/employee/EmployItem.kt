@@ -26,9 +26,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun EmployItem(name: String, position: String) {
+fun EmployItem(name: String, position: String, onItemClick: () -> Unit) {
     val firstChar = name.trim().first().toString().uppercase()
-    Row(Modifier.fillMaxWidth().padding(24.dp)) {
+    Row(Modifier.fillMaxWidth().clickable {
+        onItemClick()
+    }.padding(24.dp)) {
         Box(
             modifier = Modifier
                 .size(56.dp)

@@ -15,7 +15,9 @@ import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.SEND
 import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.USER_PATH
 import link.peipei.countmoney.data.entities.CreateEmployRequest
 import link.peipei.countmoney.data.entities.EmployEntity
+import link.peipei.countmoney.data.entities.EmployWithSalary
 import link.peipei.countmoney.data.entities.LoginRequestBody
+import link.peipei.countmoney.data.entities.SalaryEntity
 import link.peipei.countmoney.data.entities.SendSmsRequestBody
 import link.peipei.countmoney.data.entities.StoreRequest
 import link.peipei.countmoney.data.entities.StoreResponse
@@ -44,13 +46,13 @@ interface CountingMoneyApi {
     @GET("employee")
     suspend fun getEmployee(
         @Query("storeId") storeId: String
-    ): List<EmployEntity>
+    ): List<EmployWithSalary>
 
     @Headers("Content-Type:application/json")
     @POST("employee")
     suspend fun addEmploy(
         @Body createEmployRequest: CreateEmployRequest
-    ): EmployEntity
+    ): EmployWithSalary
 
     @Headers("Content-Type:application/json")
     @GET(USER_PATH)
@@ -63,5 +65,9 @@ interface CountingMoneyApi {
         @Body map: MultiPartFormDataContent
     ): UploadImageData
 
-
+    @GET("employee/salaries")
+    @Headers("Content-Type:application/json")
+    suspend fun getSalariesByEmployId(
+        @Query("employId") employId: String
+    ):List<SalaryEntity>
 }
