@@ -8,6 +8,7 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import link.peipei.countmoney.core_ui.view.TextFieldContent
 import link.peipei.countmoney.data.repository.StoreRepository
 
 class CreateStoreViewModel(private val repository: StoreRepository) : ScreenModel {

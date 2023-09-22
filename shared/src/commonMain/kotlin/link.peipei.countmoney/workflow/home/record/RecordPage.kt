@@ -11,7 +11,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LeadingIconTab
@@ -25,12 +24,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
-import link.peipei.countmoney.data.entities.EmployEntity
 import link.peipei.countmoney.data.entities.EmployWithSalary
-import link.peipei.countmoney.workflow.add.AddEmployeeScreen
+import link.peipei.countmoney.workflow.add.EmployeeDetailScreen
 import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 import link.peipei.countmoney.workflow.home.record.employee.EmployeePage
 import link.peipei.countmoney.workflow.home.record.employee.EmployeeUiState
@@ -115,7 +112,7 @@ fun RecordPage(employeeUiState: EmployeeUiState, onRetryClick: () -> Unit) {
             FloatingActionButton(
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
                 onClick = {
-                    navigator.push(AddEmployeeScreen(EmployWithSalary.empty()))
+                    navigator.push(EmployeeDetailScreen(EmployWithSalary.empty()))
                 },
             ) {
                 Icon(

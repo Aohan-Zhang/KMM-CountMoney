@@ -26,14 +26,17 @@ import com.moriatsushi.insetsx.safeArea
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEmployeePage() {
+fun EmployeeDetailPage(
+    uiState: EmployeeDetailUiState,
+    employPageInteraction: EmployPageInteraction
+) {
     val navigator = LocalNavigator.currentOrThrow
     Scaffold(
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
                 title = {
-                    Text("新增员工", fontWeight = FontWeight.Bold)
+                    Text(uiState.title, fontWeight = FontWeight.Bold)
                 },
                 windowInsets = WindowInsets.safeArea.only(
                     WindowInsetsSides.Top + WindowInsetsSides.Horizontal
@@ -49,7 +52,7 @@ fun AddEmployeePage() {
                 },
                 actions = {
                     Text(
-                        "保存",
+                        uiState.actionName,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.padding(end = 16.dp)
@@ -58,6 +61,6 @@ fun AddEmployeePage() {
             )
         }
     ) {
-        AddEmployeeContent(Modifier.padding(it))
+        EmployeeDetailContent(Modifier.padding(it), uiState, employPageInteraction)
     }
 }

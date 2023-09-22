@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
@@ -19,6 +20,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -32,26 +34,40 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import io.ktor.util.date.GMTDate
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddEmployeeContent(modifier: Modifier = Modifier) {
+fun EmployeeDetailContent(
+    modifier: Modifier = Modifier,
+    uiState: EmployeeDetailUiState,
+    employPageInteraction: EmployPageInteraction
+) {
     var openDialog by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(uiState.hireDate.timestamp)
     val focusManager = LocalFocusManager.current
     if (openDialog) {
         DatePickerDialog(
             onDismissRequest = { openDialog = false },
             confirmButton = {
-                Text("确定", color = MaterialTheme.colorScheme.primary)
+                TextButton({
+                    employPageInteraction.onHireDateUpdate(datePickerState.selectedDateMillis)
+                    openDialog = false
+                }) {
+                    Text("确定")
+                }
             },
             dismissButton = {
-                Text("取消", color = MaterialTheme.colorScheme.primary)
+                TextButton({
+                    openDialog = false
+                }) {
+                    Text("取消")
+                }
             },
-            ){
+        ) {
             DatePicker(state = datePickerState, title = {
                 Text(
                     modifier = Modifier.padding(16.dp),
@@ -83,25 +99,27 @@ fun AddEmployeeContent(modifier: Modifier = Modifier) {
             fontWeight = FontWeight.SemiBold
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            value = uiState.name.toString(),
+            onValueChange = employPageInteraction::onNameUpdate,
             label = { Text("姓名") },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
         OutlinedTextField(
-            value = "",
-            onValueChange = {},
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            value = uiState.phone.toString(),
+            onValueChange = employPageInteraction::onPhoneUpdate,
             label = { Text("手机号") },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
         OutlinedTextField(
-            value = "",
+            value = uiState.position.toString(),
             onValueChange = {},
             label = { Text("职位") },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
-        val date = GMTDate(datePickerState.selectedDateMillis)
+        val date = uiState.hireDate
         OutlinedTextField(
+            enabled = uiState.hireDateEnable,
             value = "${date.year}/${date.month.ordinal}/${date.dayOfMonth}",
             onValueChange = {},
             label = { Text("入职时间") },
@@ -119,7 +137,7 @@ fun AddEmployeeContent(modifier: Modifier = Modifier) {
             modifier = Modifier.padding(top = 16.dp),
             fontWeight = FontWeight.SemiBold
         )
-        var state by remember { mutableStateOf(true) }
+        var state by remember { mutableStateOf(uiState.gender == 1) }
         Row(Modifier.selectableGroup()) {
             RadioButton(
                 selected = state,
@@ -143,7 +161,7 @@ fun AddEmployeeContent(modifier: Modifier = Modifier) {
                 modifier = Modifier.align(Alignment.CenterVertically),
             )
         }
-        var incomeValue by remember { mutableStateOf(0f) }
+        var incomeValue by remember { mutableStateOf(uiState.basicSalary.toFloat() / 100) }
 
         Text(
             text = "薪资 ￥${incomeValue.toInt() * 100}",
@@ -162,7 +180,7 @@ fun AddEmployeeContent(modifier: Modifier = Modifier) {
             modifier = Modifier.semantics { contentDescription = "Localized Description" },
         )
 
-        var bonusValue by remember { mutableStateOf(0f) }
+        var bonusValue by remember { mutableStateOf(uiState.allowance.toFloat() / 100) }
 
 
         Text(
@@ -182,7 +200,7 @@ fun AddEmployeeContent(modifier: Modifier = Modifier) {
             modifier = Modifier.semantics { contentDescription = "Localized Description" },
         )
 
-        var performance by remember { mutableStateOf(0f) }
+        var performance by remember { mutableStateOf(uiState.bonus.toFloat() / 100) }
 
 
         Text(

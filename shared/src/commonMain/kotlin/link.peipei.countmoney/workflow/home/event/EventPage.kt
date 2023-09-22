@@ -7,9 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import cafe.adriel.voyager.navigator.currentOrThrow
-import link.peipei.countmoney.workflow.add.AddEmployeeScreen
-import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 
 @Composable
 fun EventPage(eventPageViewModel: EventPageViewModel, modifier: Modifier = Modifier) {

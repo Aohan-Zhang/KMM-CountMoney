@@ -1,5 +1,7 @@
 package link.peipei.countmoney.workflow.store.add
 
+import link.peipei.countmoney.core_ui.view.TextFieldContent
+
 const val MAX_DES_LENGTH = 50
 
 data class CreateStoreUiState(
@@ -14,21 +16,3 @@ data class CreateStoreUiState(
 
 )
 
-data class TextFieldContent(
-    val nullable: Boolean = false,
-    val content: String = "",
-    val showError: Boolean = false,
-    val message: String = "",
-) {
-    fun shouldShowCleanButton(): Boolean {
-        return content.isNotBlank()
-    }
-
-    fun validate(): TextFieldContent {
-        return if (!nullable && content.isBlank()) {
-            this.copy(showError = true, message = "该字段不能为空")
-        } else {
-            this
-        }
-    }
-}

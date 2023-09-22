@@ -1,10 +1,8 @@
 package link.peipei.countmoney.workflow.home.record.employee
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,7 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.currentOrThrow
-import link.peipei.countmoney.workflow.add.AddEmployeeScreen
+import link.peipei.countmoney.workflow.add.EmployeeDetailScreen
 import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 
 @Composable
@@ -45,7 +43,7 @@ fun EmployeePage(uiState: EmployeeUiState, onRetryClick: () -> Unit) {
                 }
                 items(uiState.employee) {
                     EmployItem(it.employ.name, it.employ.position){
-                        navigator.push(AddEmployeeScreen(it))
+                        navigator.push(EmployeeDetailScreen(it))
                     }
                 }
             }
