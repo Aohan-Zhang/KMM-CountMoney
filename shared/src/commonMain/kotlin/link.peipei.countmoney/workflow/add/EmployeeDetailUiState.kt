@@ -8,11 +8,11 @@ import link.peipei.countmoney.core_ui.view.TextFieldContent
 data class EmployeeDetailUiState(
     val title: String,
     val actionName: String,
+    val dateDes:String,
     val name: TextFieldContent = TextFieldContent(),
     val phone: TextFieldContent = TextFieldContent(validator = PhoneNumberTextFieldValidator),
     val position: TextFieldContent = TextFieldContent(),
-    val hireDate: GMTDate = GMTDate(getTimeMillis()),
-    val hireDateEnable: Boolean = true,
+    val date: GMTDate = GMTDate(getTimeMillis()),
     val gender: Int = 0,
     val basicSalary: Int = 0,
     val allowance: Int = 0,

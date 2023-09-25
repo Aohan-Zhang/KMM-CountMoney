@@ -7,9 +7,10 @@ import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.flow.update
 import link.peipei.countmoney.data.UserManager
 import link.peipei.countmoney.data.api.CountingMoneyApi
-import link.peipei.countmoney.data.entities.CreateEmployRequest
+import link.peipei.countmoney.data.entities.UpdateEmployRequest
 import link.peipei.countmoney.data.entities.EmployEntity
 import link.peipei.countmoney.data.entities.EmployWithSalary
+import link.peipei.countmoney.data.entities.SalaryEntity
 
 class EmployRepository(private val api: CountingMoneyApi, private val userManager: UserManager) {
     private val employeeFlow = MutableStateFlow(listOf<EmployWithSalary>())
@@ -30,7 +31,7 @@ class EmployRepository(private val api: CountingMoneyApi, private val userManage
         }
     }
 
-    suspend fun addEmploy(createEmployRequest: CreateEmployRequest): Boolean {
+    suspend fun addEmploy(createEmployRequest: UpdateEmployRequest): Boolean {
         val storeId = userManager.getUserStore().firstOrNull()?.toLongOrNull() ?: return false
         val newCreateEmployRequest = createEmployRequest.copy(storeId = storeId)
         return try {
@@ -42,5 +43,60 @@ class EmployRepository(private val api: CountingMoneyApi, private val userManage
         } catch (_: Exception) {
             false
         }
+    }
+
+    suspend fun updateEmploy(createEmployRequest: UpdateEmployRequest, employId: String): Boolean {
+        val storeId = userManager.getUserStore().firstOrNull()?.toLongOrNull() ?: return false
+        val newCreateEmployRequest = createEmployRequest.copy(storeId = storeId)
+        return try {
+            val result = api.updateEmploy(newCreateEmployRequest, employId).result
+            if (!result) return false
+            employeeFlow.update { employAndSalary ->
+                employAndSalary.map {
+                    if (it.employ.id == employId) {
+                        getEmployWithSalaryByCreateEmployRequest(
+                            createEmployRequest,
+                            it.salaries,
+                            employId,
+                            storeId,
+                            it.employ.hireDate
+                        )
+                    } else {
+                        it
+                    }
+                }
+            }
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    private fun getEmployWithSalaryByCreateEmployRequest(
+        createEmployRequest: UpdateEmployRequest,
+        salaries: List<SalaryEntity>,
+        employId: String,
+        storeId: Long,
+        employCreateDate: String
+    ): EmployWithSalary {
+        val employ = EmployEntity(
+            employId,
+            storeId,
+            createEmployRequest.phoneNumber,
+            createEmployRequest.position,
+            employCreateDate,
+            createEmployRequest.gender,
+            createEmployRequest.name
+        )
+        val salary = SalaryEntity(
+            "",
+            employId,
+            createEmployRequest.basicSalary,
+            createEmployRequest.allowance,
+            createEmployRequest.bonus,
+            createEmployRequest.updateDate
+
+        )
+        return EmployWithSalary(employ, salaries + salary)
     }
 }

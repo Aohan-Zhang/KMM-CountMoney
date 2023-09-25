@@ -12,10 +12,14 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontWeight
@@ -23,15 +27,38 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
 import com.moriatsushi.insetsx.safeArea
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmployeeDetailPage(
     uiState: EmployeeDetailUiState,
-    employPageInteraction: EmployPageInteraction
+    event: SharedFlow<EmployeeDetailEvent>,
+    employPageInteraction: EmployPageInteraction,
+    onActionClick: () -> Unit
 ) {
     val navigator = LocalNavigator.currentOrThrow
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(event) {
+        event.collectLatest {
+            when (it) {
+                is SnackBarEvent -> {
+                    snackbarHostState.showSnackbar(it.message)
+                }
+
+                is UpdateResultEvent -> {
+                    if (it.result) {
+                        navigator.pop()
+                    } else {
+                        snackbarHostState.showSnackbar("网络出错啦，请重试")
+                    }
+                }
+            }
+        }
+    }
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 colors = TopAppBarDefaults.topAppBarColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
@@ -55,7 +82,11 @@ fun EmployeeDetailPage(
                         uiState.actionName,
                         color = MaterialTheme.colorScheme.primary,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(end = 16.dp)
+                        modifier = Modifier
+                            .clickable {
+                                onActionClick()
+                            }
+                            .padding(end = 16.dp)
                     )
                 }
             )

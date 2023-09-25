@@ -13,6 +13,8 @@ class EmployeeDetailScreen(private val employWithSalary: EmployWithSalary) : Scr
         val viewModel =
             rememberScreenModel<EmployWithSalary, EmployeeDetailViewModel>(arg = employWithSalary)
         val uiState by viewModel.employeeUiState.collectAsState()
-        EmployeeDetailPage(uiState, viewModel)
+        EmployeeDetailPage(uiState, viewModel.snackbarEvent, viewModel) {
+            viewModel.update()
+        }
     }
 }

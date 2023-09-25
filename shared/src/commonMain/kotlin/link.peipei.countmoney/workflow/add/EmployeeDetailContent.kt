@@ -36,7 +36,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import io.ktor.util.date.GMTDate
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -47,7 +46,7 @@ fun EmployeeDetailContent(
     employPageInteraction: EmployPageInteraction
 ) {
     var openDialog by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState(uiState.hireDate.timestamp)
+    val datePickerState = rememberDatePickerState(uiState.date.timestamp)
     val focusManager = LocalFocusManager.current
     if (openDialog) {
         DatePickerDialog(
@@ -99,12 +98,24 @@ fun EmployeeDetailContent(
             fontWeight = FontWeight.SemiBold
         )
         OutlinedTextField(
+            isError = uiState.name.showError,
+            supportingText = if (uiState.name.showError) {
+                { Text(uiState.name.message) }
+            } else {
+                null
+            },
             value = uiState.name.toString(),
             onValueChange = employPageInteraction::onNameUpdate,
             label = { Text("姓名") },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
         OutlinedTextField(
+            isError = uiState.phone.showError,
+            supportingText = if (uiState.phone.showError) {
+                { Text(uiState.phone.message) }
+            } else {
+                null
+            },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             value = uiState.phone.toString(),
             onValueChange = employPageInteraction::onPhoneUpdate,
@@ -112,17 +123,22 @@ fun EmployeeDetailContent(
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
         OutlinedTextField(
+            isError = uiState.position.showError,
+            supportingText = if (uiState.position.showError) {
+                { Text(uiState.position.message) }
+            } else {
+                null
+            },
             value = uiState.position.toString(),
             onValueChange = {},
             label = { Text("职位") },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
-        val date = uiState.hireDate
+        val date = uiState.date
         OutlinedTextField(
-            enabled = uiState.hireDateEnable,
             value = "${date.year}/${date.month.ordinal}/${date.dayOfMonth}",
             onValueChange = {},
-            label = { Text("入职时间") },
+            label = { Text(uiState.dateDes) },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
                 .onFocusChanged {
                     if (it.isFocused) {
@@ -137,11 +153,10 @@ fun EmployeeDetailContent(
             modifier = Modifier.padding(top = 16.dp),
             fontWeight = FontWeight.SemiBold
         )
-        var state by remember { mutableStateOf(uiState.gender == 1) }
         Row(Modifier.selectableGroup()) {
             RadioButton(
-                selected = state,
-                onClick = { state = true },
+                selected = uiState.gender == 1,
+                onClick = { employPageInteraction.onGenderUpdate(true) },
                 modifier = Modifier.semantics { contentDescription = "男" }
             )
             Text(
@@ -151,8 +166,8 @@ fun EmployeeDetailContent(
             )
             Spacer(Modifier.width(16.dp))
             RadioButton(
-                selected = !state,
-                onClick = { state = false },
+                selected = uiState.gender != 1,
+                onClick = { employPageInteraction.onGenderUpdate(false) },
                 modifier = Modifier.semantics { contentDescription = "女" }
             )
             Text(
@@ -161,59 +176,56 @@ fun EmployeeDetailContent(
                 modifier = Modifier.align(Alignment.CenterVertically),
             )
         }
-        var incomeValue by remember { mutableStateOf(uiState.basicSalary.toFloat() / 100) }
 
         Text(
-            text = "薪资 ￥${incomeValue.toInt() * 100}",
+            text = "薪资 ￥${uiState.basicSalary}",
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 16.dp),
             fontWeight = FontWeight.SemiBold
         )
 
         Slider(
-            value = incomeValue,
+            value = (uiState.basicSalary.toFloat() / 100),
             onValueChange = {
-                incomeValue = it
+                employPageInteraction.onSalaryUpdate(it.toInt() * 100)
             },
             valueRange = 0f..100f,
             steps = 0,
             modifier = Modifier.semantics { contentDescription = "Localized Description" },
         )
 
-        var bonusValue by remember { mutableStateOf(uiState.allowance.toFloat() / 100) }
 
 
         Text(
-            text = "补贴 ￥${bonusValue.toInt() * 100}",
+            text = "补贴 ￥${uiState.allowance}",
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 16.dp),
             fontWeight = FontWeight.SemiBold
         )
 
         Slider(
-            value = bonusValue,
+            value = uiState.allowance.toFloat() / 100,
             onValueChange = {
-                bonusValue = it
+                employPageInteraction.onAllowanceUpdate(it.toInt() * 100)
             },
             valueRange = 0f..100f,
             steps = 0,
             modifier = Modifier.semantics { contentDescription = "Localized Description" },
         )
 
-        var performance by remember { mutableStateOf(uiState.bonus.toFloat() / 100) }
 
 
         Text(
-            text = "总绩效 ￥${performance.toInt() * 100}",
+            text = "总绩效 ￥${uiState.bonus}",
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier.padding(top = 16.dp),
             fontWeight = FontWeight.SemiBold
         )
 
         Slider(
-            value = performance,
+            value = uiState.bonus.toFloat() / 100,
             onValueChange = {
-                performance = it
+                employPageInteraction.onBonusUpdate(it.toInt() * 100)
             },
             valueRange = 0f..100f,
             steps = 0,

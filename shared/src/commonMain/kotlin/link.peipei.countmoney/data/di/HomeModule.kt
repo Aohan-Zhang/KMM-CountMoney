@@ -46,9 +46,9 @@ val homeModule = DI {
     bindProvider { StoreSelectionViewModel(instance()) }
     bind<EmployeeDetailViewModel>() with factory { params: EmployWithSalary ->
         if (params.salaries.isEmpty()) {
-            AddEmployeeViewModel()
+            AddEmployeeViewModel(instance())
         } else {
-            UpdateEmployeeViewModel(params) as EmployeeDetailViewModel
+            UpdateEmployeeViewModel(params, instance()) as EmployeeDetailViewModel
         }
     }
 }
