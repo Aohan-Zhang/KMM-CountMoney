@@ -29,6 +29,7 @@ import cafe.adriel.voyager.navigator.currentOrThrow
 import com.moriatsushi.insetsx.safeArea
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
+import link.peipei.countmoney.core_ui.view.TextLoadingButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,16 +79,13 @@ fun EmployeeDetailPage(
                     )
                 },
                 actions = {
-                    Text(
-                        uiState.actionName,
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier
-                            .clickable {
-                                onActionClick()
-                            }
-                            .padding(end = 16.dp)
-                    )
+                    TextLoadingButton(
+                        text = uiState.actionName,
+                        isLoading = uiState.isUpdating,
+                        enable = !uiState.isUpdating
+                    ) {
+                        onActionClick()
+                    }
                 }
             )
         }

@@ -1,10 +1,11 @@
 package link.peipei.countmoney.workflow.add
 
+import cafe.adriel.voyager.core.model.coroutineScope
 import io.ktor.util.date.GMTDate
-import io.ktor.util.date.GMTDateParser
 import io.ktor.util.date.Month
 import io.ktor.util.date.getTimeMillis
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import link.peipei.countmoney.core_common.parse
 import link.peipei.countmoney.core_ui.view.TextFieldContent
 import link.peipei.countmoney.data.entities.UpdateEmployRequest
@@ -37,17 +38,28 @@ class UpdateEmployeeViewModel(
     override fun update() {
         val uiState = innerEmployeeUiState.value
         verifyInputDate {
-            val updateEmployRequest = UpdateEmployRequest(
-                -1,
-                uiState.name.content,
-                uiState.phone.content.toLong(),
-                uiState.position.content,
-                uiState.gender,
-                uiState.basicSalary,
-                uiState.allowance,
-                uiState.bonus,
-                uiState.date.parse()
-            )
+            coroutineScope.launch {
+                innerEmployeeUiState.update {
+                    it.copy(isUpdating = true)
+                }
+                val updateEmployRequest = UpdateEmployRequest(
+                    -1,
+                    uiState.name.content,
+                    uiState.phone.content.toLong(),
+                    uiState.position.content,
+                    uiState.gender,
+                    uiState.basicSalary,
+                    uiState.allowance,
+                    uiState.bonus,
+                    uiState.date.parse()
+                )
+                val result = repo.updateEmploy(updateEmployRequest, employWithSalary.employ.id)
+                innerEmployeeUiState.update {
+                    it.copy(isUpdating = false)
+                }
+                innerEvent.emit(UpdateResultEvent(result))
+            }
+
         }
     }
 

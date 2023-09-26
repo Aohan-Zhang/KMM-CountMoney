@@ -8,7 +8,9 @@ class AddEmployeeViewModel(private val repo: EmployRepository) : EmployeeDetailV
     }
 
     override fun update() {
-        verifyInputDate { }
+        verifyInputDate {
+
+        }
     }
 
 }

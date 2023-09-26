@@ -25,15 +25,15 @@ abstract class EmployeeDetailViewModel : ScreenModel,
         innerEmployeeUiState.asStateFlow()
     }
 
-    protected val innerSnackbarEvent = MutableSharedFlow<EmployeeDetailEvent>()
-    val snackbarEvent = innerSnackbarEvent.asSharedFlow()
+    protected val innerEvent = MutableSharedFlow<EmployeeDetailEvent>()
+    val snackbarEvent = innerEvent.asSharedFlow()
 
     fun verifyInputDate(block: () -> Unit) {
 
         with(innerEmployeeUiState) {
             if (value.basicSalary == 0) {
                 coroutineScope.launch {
-                    innerSnackbarEvent.emit(SnackBarEvent("薪资不能为 0"))
+                    innerEvent.emit(SnackBarEvent("薪资不能为 0"))
                 }
                 return
             }

@@ -34,7 +34,7 @@ val homeModule = DI {
         AppInterceptor(instance())
     }
     bindSingleton {
-        KtorfitFactory.create("https://api.peipei.link/", instance<AppInterceptor>())
+        KtorfitFactory.create("http://10.22.81.33:8080/", instance<AppInterceptor>())
     }
     bindSingleton { AccountRepository(instance(), instance()) }
     bindSingleton { EmployRepository(instance(), instance()) }

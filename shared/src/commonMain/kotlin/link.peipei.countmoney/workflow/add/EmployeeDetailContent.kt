@@ -130,7 +130,7 @@ fun EmployeeDetailContent(
                 null
             },
             value = uiState.position.toString(),
-            onValueChange = {},
+            onValueChange = employPageInteraction::onPositionUpdate,
             label = { Text("职位") },
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
