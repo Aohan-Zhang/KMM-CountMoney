@@ -36,24 +36,12 @@ class UpdateEmployeeViewModel(
     }
 
     override fun update() {
-        val uiState = innerEmployeeUiState.value
-        verifyInputDate {
+        verifyInputDate { request ->
             coroutineScope.launch {
                 innerEmployeeUiState.update {
                     it.copy(isUpdating = true)
                 }
-                val updateEmployRequest = UpdateEmployRequest(
-                    -1,
-                    uiState.name.content,
-                    uiState.phone.content.toLong(),
-                    uiState.position.content,
-                    uiState.gender,
-                    uiState.basicSalary,
-                    uiState.allowance,
-                    uiState.bonus,
-                    uiState.date.parse()
-                )
-                val result = repo.updateEmploy(updateEmployRequest, employWithSalary.employ.id)
+                val result = repo.updateEmploy(request, employWithSalary.employ.id)
                 innerEmployeeUiState.update {
                     it.copy(isUpdating = false)
                 }

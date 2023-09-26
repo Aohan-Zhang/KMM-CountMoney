@@ -9,6 +9,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import link.peipei.countmoney.core_common.parse
+import link.peipei.countmoney.data.entities.UpdateEmployRequest
 
 sealed class EmployeeDetailEvent
 
@@ -28,7 +30,7 @@ abstract class EmployeeDetailViewModel : ScreenModel,
     protected val innerEvent = MutableSharedFlow<EmployeeDetailEvent>()
     val snackbarEvent = innerEvent.asSharedFlow()
 
-    fun verifyInputDate(block: () -> Unit) {
+    fun verifyInputDate(block: (UpdateEmployRequest) -> Unit) {
 
         with(innerEmployeeUiState) {
             if (value.basicSalary == 0) {
@@ -53,7 +55,19 @@ abstract class EmployeeDetailViewModel : ScreenModel,
                 }
 
             } else {
-                block()
+                val uiState = innerEmployeeUiState.value
+                val updateEmployRequest = UpdateEmployRequest(
+                    -1,
+                    uiState.name.content,
+                    uiState.phone.content.toLong(),
+                    uiState.position.content,
+                    uiState.gender,
+                    uiState.basicSalary,
+                    uiState.allowance,
+                    uiState.bonus,
+                    uiState.date.parse()
+                )
+                block(updateEmployRequest)
             }
         }
 
