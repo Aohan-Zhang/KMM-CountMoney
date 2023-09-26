@@ -98,6 +98,7 @@ fun EmployeeDetailContent(
             fontWeight = FontWeight.SemiBold
         )
         OutlinedTextField(
+            enabled = !uiState.isUpdating,
             isError = uiState.name.showError,
             supportingText = if (uiState.name.showError) {
                 { Text(uiState.name.message) }
@@ -110,6 +111,7 @@ fun EmployeeDetailContent(
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
         OutlinedTextField(
+            enabled = !uiState.isUpdating,
             isError = uiState.phone.showError,
             supportingText = if (uiState.phone.showError) {
                 { Text(uiState.phone.message) }
@@ -123,6 +125,7 @@ fun EmployeeDetailContent(
             modifier = Modifier.fillMaxWidth().padding(top = 8.dp, start = 8.dp, end = 8.dp)
         )
         OutlinedTextField(
+            enabled = !uiState.isUpdating,
             isError = uiState.position.showError,
             supportingText = if (uiState.position.showError) {
                 { Text(uiState.position.message) }
@@ -136,6 +139,7 @@ fun EmployeeDetailContent(
         )
         val date = uiState.date
         OutlinedTextField(
+            enabled = !uiState.isUpdating,
             value = "${date.year}/${date.month.ordinal}/${date.dayOfMonth}",
             onValueChange = {},
             label = { Text(uiState.dateDes) },
@@ -155,6 +159,7 @@ fun EmployeeDetailContent(
         )
         Row(Modifier.selectableGroup()) {
             RadioButton(
+                enabled = !uiState.isUpdating,
                 selected = uiState.gender == 1,
                 onClick = { employPageInteraction.onGenderUpdate(true) },
                 modifier = Modifier.semantics { contentDescription = "男" }
@@ -166,6 +171,7 @@ fun EmployeeDetailContent(
             )
             Spacer(Modifier.width(16.dp))
             RadioButton(
+                enabled = !uiState.isUpdating,
                 selected = uiState.gender != 1,
                 onClick = { employPageInteraction.onGenderUpdate(false) },
                 modifier = Modifier.semantics { contentDescription = "女" }
@@ -185,6 +191,7 @@ fun EmployeeDetailContent(
         )
 
         Slider(
+            enabled = !uiState.isUpdating,
             value = (uiState.basicSalary.toFloat() / 100),
             onValueChange = {
                 employPageInteraction.onSalaryUpdate(it.toInt() * 100)
@@ -204,6 +211,7 @@ fun EmployeeDetailContent(
         )
 
         Slider(
+            enabled = !uiState.isUpdating,
             value = uiState.allowance.toFloat() / 100,
             onValueChange = {
                 employPageInteraction.onAllowanceUpdate(it.toInt() * 100)
@@ -223,6 +231,7 @@ fun EmployeeDetailContent(
         )
 
         Slider(
+            enabled = !uiState.isUpdating,
             value = uiState.bonus.toFloat() / 100,
             onValueChange = {
                 employPageInteraction.onBonusUpdate(it.toInt() * 100)

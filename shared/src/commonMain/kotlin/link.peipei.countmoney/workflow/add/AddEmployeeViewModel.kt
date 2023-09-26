@@ -3,8 +3,6 @@ package link.peipei.countmoney.workflow.add
 import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import link.peipei.countmoney.core_common.parse
-import link.peipei.countmoney.data.entities.UpdateEmployRequest
 import link.peipei.countmoney.data.repository.EmployRepository
 
 class AddEmployeeViewModel(private val repo: EmployRepository) : EmployeeDetailViewModel() {

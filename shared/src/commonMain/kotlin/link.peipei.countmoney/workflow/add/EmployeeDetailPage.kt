@@ -22,6 +22,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -39,6 +40,7 @@ fun EmployeeDetailPage(
     employPageInteraction: EmployPageInteraction,
     onActionClick: () -> Unit
 ) {
+    val focusManager = LocalFocusManager.current
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(event) {
@@ -84,6 +86,7 @@ fun EmployeeDetailPage(
                         isLoading = uiState.isUpdating,
                         enable = !uiState.isUpdating
                     ) {
+                        focusManager.clearFocus()
                         onActionClick()
                     }
                 }
