@@ -14,15 +14,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -32,7 +35,7 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.collectLatest
 import link.peipei.countmoney.core_ui.view.TextLoadingButton
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EmployeeDetailPage(
     uiState: EmployeeDetailUiState,
@@ -41,6 +44,7 @@ fun EmployeeDetailPage(
     onActionClick: () -> Unit
 ) {
     val focusManager = LocalFocusManager.current
+    val keyboardManager = LocalSoftwareKeyboardController.current
     val navigator = LocalNavigator.currentOrThrow
     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(event) {
@@ -87,6 +91,7 @@ fun EmployeeDetailPage(
                         enable = !uiState.isUpdating
                     ) {
                         focusManager.clearFocus()
+                        keyboardManager?.hide()
                         onActionClick()
                     }
                 }

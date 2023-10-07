@@ -6,13 +6,13 @@ plugins {
     id("com.android.library")
     id("org.jetbrains.compose")
     id("com.google.devtools.ksp") version "1.9.10-1.0.13"
-    id("de.jensklingenberg.ktorfit") version "1.0.0"
+    id("de.jensklingenberg.ktorfit") version "1.7.0"
     id("app.cash.sqldelight")
     id("kotlinx-serialization")
 }
 
 val ktorVersion = "2.3.3"
-val ktorfitVersion = "1.4.4"
+val ktorfitVersion = "1.7.0"
 val sqlDelightVersion = "2.0.0"
 val dataStoreVersion = "1.1.0-alpha04"
 
@@ -106,9 +106,15 @@ android {
     }
 }
 dependencies {
-    add("kspCommonMainMetadata", "de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion")
-    add("kspAndroid", "de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion")
-    add("kspIosSimulatorArm64", "de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion")
+    with("de.jensklingenberg.ktorfit:ktorfit-ksp:$ktorfitVersion") {
+        add("kspCommonMainMetadata", this)
+        add("kspAndroid", this)
+        add("kspAndroidTest", this)
+        add("kspIosArm64", this)
+        add("kspIosArm64Test", this)
+        add("kspIosSimulatorArm64", this)
+        add("kspIosSimulatorArm64Test", this)
+    }
 }
 sqldelight {
     databases {

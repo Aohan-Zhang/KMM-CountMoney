@@ -45,6 +45,24 @@ class EmployRepository(private val api: CountingMoneyApi, private val userManage
         }
     }
 
+    suspend fun deleteEmploy(employId: String): Boolean {
+        val storeId = userManager.getUserStore().firstOrNull()?.toLongOrNull() ?: return false
+        val currentList = employeeFlow.value
+        val newList = currentList.filter { it.employ.id != employId }
+        employeeFlow.emit(newList)
+        return try {
+            val result = api.deleteEmploy(employId, storeId.toString()).result
+            if (!result) {
+                employeeFlow.emit(currentList)
+                return false
+            }
+            true
+        } catch (_: Exception) {
+            employeeFlow.emit(currentList)
+            false
+        }
+    }
+
     suspend fun updateEmploy(createEmployRequest: UpdateEmployRequest, employId: String): Boolean {
         val storeId = userManager.getUserStore().firstOrNull()?.toLongOrNull() ?: return false
         val newCreateEmployRequest = createEmployRequest.copy(storeId = storeId)

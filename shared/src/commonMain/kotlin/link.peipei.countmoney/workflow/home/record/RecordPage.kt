@@ -45,7 +45,11 @@ data class RecordPageTabs(
     ExperimentalResourceApi::class, ExperimentalFoundationApi::class
 )
 @Composable
-fun RecordPage(employeeUiState: EmployeeUiState, onRetryClick: () -> Unit) {
+fun RecordPage(
+    employeeUiState: EmployeeUiState,
+    onRetryClick: () -> Unit,
+    onDeleteClick: (String) -> Unit
+) {
     val navigator = LocalGlobalNavigator.currentOrThrow
 
     val pagerState = rememberPagerState {
@@ -105,7 +109,7 @@ fun RecordPage(employeeUiState: EmployeeUiState, onRetryClick: () -> Unit) {
                     }
 
                     1 -> {
-                        EmployeePage(employeeUiState, onRetryClick)
+                        EmployeePage(employeeUiState, onRetryClick, onDeleteClick)
                     }
                 }
             }

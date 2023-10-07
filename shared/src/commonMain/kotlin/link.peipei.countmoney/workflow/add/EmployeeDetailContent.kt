@@ -28,9 +28,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -38,7 +40,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun EmployeeDetailContent(
     modifier: Modifier = Modifier,
@@ -48,6 +50,7 @@ fun EmployeeDetailContent(
     var openDialog by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState(uiState.date.timestamp)
     val focusManager = LocalFocusManager.current
+    val keyboardManager = LocalSoftwareKeyboardController.current
     if (openDialog) {
         DatePickerDialog(
             onDismissRequest = { openDialog = false },
@@ -76,6 +79,7 @@ fun EmployeeDetailContent(
             })
         }
         focusManager.clearFocus(true)
+        keyboardManager?.hide()
     }
     val interactionSource = remember { MutableInteractionSource() }
 
@@ -86,6 +90,7 @@ fun EmployeeDetailContent(
                 indication = null
             ) {
                 focusManager.clearFocus(true)
+                keyboardManager?.hide()
             }
             .verticalScroll(rememberScrollState())
             .padding(16.dp)

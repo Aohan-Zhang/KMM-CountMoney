@@ -9,8 +9,14 @@ fun GMTDate.parse(): String {
     } else {
         monthIndex
     }
+    var dayIndex = "0${dayOfMonth}"
+    dayIndex = if (dayIndex.length == 3) {
+        dayIndex.drop(1)
+    } else {
+        dayIndex
+    }
     val h = if (hours.toString().length == 2) hours else "0$hours"
     val m = if (minutes.toString().length == 2) minutes else "0$minutes"
     val s = if (seconds.toString().length == 2) seconds else "0$seconds"
-    return "$year-$monthIndex-$dayOfMonth $h:$m:$s"
+    return "$year-$monthIndex-$dayIndex $h:$m:$s"
 }

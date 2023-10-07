@@ -1,6 +1,7 @@
 package link.peipei.countmoney.data.api
 
 import de.jensklingenberg.ktorfit.http.Body
+import de.jensklingenberg.ktorfit.http.DELETE
 import de.jensklingenberg.ktorfit.http.GET
 import de.jensklingenberg.ktorfit.http.Header
 import de.jensklingenberg.ktorfit.http.Headers
@@ -51,6 +52,13 @@ interface CountingMoneyApi {
     suspend fun addEmploy(
         @Body createEmployRequest: UpdateEmployRequest
     ): EmployWithSalary
+
+    @Headers("Content-Type:application/json")
+    @DELETE("employee")
+    suspend fun deleteEmploy(
+        @Query("employId") employId: String,
+        @Query("storeId") storeId: String,
+    ): SimpleResult
 
     @Headers("Content-Type:application/json")
     @PUT("employee")
