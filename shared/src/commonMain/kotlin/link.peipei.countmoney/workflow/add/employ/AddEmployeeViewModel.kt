@@ -1,4 +1,4 @@
-package link.peipei.countmoney.workflow.add
+package link.peipei.countmoney.workflow.add.employ
 
 import cafe.adriel.voyager.core.model.coroutineScope
 import kotlinx.coroutines.flow.update

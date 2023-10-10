@@ -1,4 +1,4 @@
-package link.peipei.countmoney.workflow.home.record.employee
+package link.peipei.countmoney.workflow.home.record
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -10,7 +10,6 @@ import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.MaterialTheme
@@ -29,9 +28,9 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun EmployItem(
+fun RecordItem(
     name: String,
-    position: String,
+    subName: String,
     onItemClick: () -> Unit,
     onDeleteClick: () -> Unit
 ) {
@@ -50,7 +49,7 @@ fun EmployItem(
         },
         supportingContent = {
             Text(
-                text = position,
+                text = subName,
                 style = MaterialTheme.typography.labelLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )

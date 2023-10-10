@@ -3,14 +3,18 @@
 package link.peipei.countmoney.workflow.home.record
 
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.LeadingIconTab
@@ -27,10 +31,10 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.navigator.currentOrThrow
 import kotlinx.coroutines.launch
 import link.peipei.countmoney.data.entities.EmployWithSalary
-import link.peipei.countmoney.workflow.add.EmployeeDetailScreen
+import link.peipei.countmoney.workflow.add.employ.EmployeeDetailScreen
 import link.peipei.countmoney.workflow.home.LocalGlobalNavigator
 import link.peipei.countmoney.workflow.home.record.employee.EmployeePage
-import link.peipei.countmoney.workflow.home.record.employee.EmployeeUiState
+import link.peipei.countmoney.workflow.home.record.employee.RecordUiState
 import link.peipei.countmoney.workflow.home.record.goods.GoodsPage
 import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
@@ -46,7 +50,7 @@ data class RecordPageTabs(
 )
 @Composable
 fun RecordPage(
-    employeeUiState: EmployeeUiState,
+    uiState: RecordUiState,
     onRetryClick: () -> Unit,
     onDeleteClick: (String) -> Unit
 ) {
@@ -74,45 +78,63 @@ fun RecordPage(
             selectedTabIndex = pagerState.currentPage,
             containerColor = MaterialTheme.colorScheme.surfaceVariant
         ) {
-            tabs.forEachIndexed { index, tab ->
-                LeadingIconTab(
-                    selected = pagerState.currentPage == index,
-                    onClick = {
-                        scope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    },
-                    text = {
-                        Text(
-                            text = tab.name,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    },
-                    icon = {
-                        if (pagerState.currentPage == index) {
-                            Icon(tab.selectedIcon, contentDescription = tab.name)
-                        } else {
-                            Icon(tab.unselectedIcon, contentDescription = tab.name)
+            if (!uiState.employeeLoadingState.isError && !uiState.employeeLoadingState.isLoading) {
+                tabs.forEachIndexed { index, tab ->
+                    LeadingIconTab(
+                        selected = pagerState.currentPage == index,
+                        onClick = {
+                            scope.launch {
+                                pagerState.animateScrollToPage(index)
+                            }
+                        },
+                        text = {
+                            Text(
+                                text = tab.name,
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                        },
+                        icon = {
+                            if (pagerState.currentPage == index) {
+                                Icon(tab.selectedIcon, contentDescription = tab.name)
+                            } else {
+                                Icon(tab.unselectedIcon, contentDescription = tab.name)
 
-                        }
-                    },
-                    unselectedContentColor = MaterialTheme.colorScheme.onSurface,
-                )
+                            }
+                        },
+                        unselectedContentColor = MaterialTheme.colorScheme.onSurface,
+                    )
+                }
             }
         }
         Box(modifier = Modifier.fillMaxSize()) {
-            HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
-                when (page) {
-                    0 -> {
-                        GoodsPage()
+            if (uiState.employeeLoadingState.isLoading) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center).size(32.dp).clickable {
+                    onRetryClick()
+                })
+            } else if (uiState.employeeLoadingState.isError) {
+                Button(
+                    modifier = Modifier.align(Alignment.Center),
+                    onClick = {
+                        onRetryClick()
                     }
+                ) {
+                    Text("重试")
+                }
+            } else {
+                HorizontalPager(state = pagerState, modifier = Modifier.fillMaxSize()) { page ->
+                    when (page) {
+                        0 -> {
+                            GoodsPage()
+                        }
 
-                    1 -> {
-                        EmployeePage(employeeUiState, onRetryClick, onDeleteClick)
+                        1 -> {
+                            EmployeePage(uiState, onDeleteClick)
+                        }
                     }
                 }
             }
+
             FloatingActionButton(
                 modifier = Modifier.align(Alignment.BottomEnd).padding(16.dp),
                 onClick = {

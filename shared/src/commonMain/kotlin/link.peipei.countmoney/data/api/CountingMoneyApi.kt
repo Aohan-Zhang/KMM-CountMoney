@@ -14,6 +14,7 @@ import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.SEND
 import link.peipei.countmoney.data.api.interceptor.AppInterceptor.Companion.USER_PATH
 import link.peipei.countmoney.data.entities.UpdateEmployRequest
 import link.peipei.countmoney.data.entities.EmployWithSalary
+import link.peipei.countmoney.data.entities.GoodsEntity
 import link.peipei.countmoney.data.entities.LoginRequestBody
 import link.peipei.countmoney.data.entities.SalaryEntity
 import link.peipei.countmoney.data.entities.SendSmsRequestBody
@@ -52,6 +53,12 @@ interface CountingMoneyApi {
     suspend fun addEmploy(
         @Body createEmployRequest: UpdateEmployRequest
     ): EmployWithSalary
+
+    @Headers("Content-Type:application/json")
+    @GET("goods")
+    suspend fun getGoods(
+        @Query("storeId") storeId: String
+    ): List<GoodsEntity>
 
     @Headers("Content-Type:application/json")
     @DELETE("employee")

@@ -17,8 +17,8 @@ internal object RecordPageTab : Tab {
     override fun Content() {
         Logger.d("dadadada")
         val viewModel = rememberScreenModel<RecordPageViewModel>()
-        val employeeUiState by viewModel.uiState.collectAsState()
-        RecordPage(employeeUiState, viewModel::refresh, viewModel::delete)
+        val uiState by viewModel.uiState.collectAsState()
+        RecordPage(uiState, viewModel::refresh, viewModel::deleteEmploy)
     }
 
     @OptIn(ExperimentalResourceApi::class)

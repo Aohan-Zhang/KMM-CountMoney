@@ -1,4 +1,4 @@
-package link.peipei.countmoney.workflow.add
+package link.peipei.countmoney.workflow.add.employ
 
 interface EmployPageInteraction {
     fun onNameUpdate(name: String)

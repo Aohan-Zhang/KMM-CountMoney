@@ -2,31 +2,34 @@ package link.peipei.countmoney.workflow.home.record
 
 import cafe.adriel.voyager.core.model.ScreenModel
 import cafe.adriel.voyager.core.model.coroutineScope
-import co.touchlab.kermit.Logger
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import link.peipei.countmoney.data.repository.EmployRepository
+import link.peipei.countmoney.data.repository.GoodsRepository
 import link.peipei.countmoney.workflow.home.record.employee.EmployeeLoadingState
-import link.peipei.countmoney.workflow.home.record.employee.EmployeeUiState
+import link.peipei.countmoney.workflow.home.record.employee.RecordUiState
 
 
-class RecordPageViewModel(private val repository: EmployRepository) : ScreenModel {
+class RecordPageViewModel(
+    private val refreshRecord: RecordRefreshUseCase,
+    private val getRecords: RecordUseCase,
+    private val employRepository: EmployRepository,
+    private val goodsRepository: GoodsRepository
+) : ScreenModel {
     private val _loadingUiState = MutableStateFlow(
         EmployeeLoadingState()
     )
 
-    private val employee = repository.getEmployeeFlow()
 
-    val uiState = combine(_loadingUiState, employee) { loadingUiState, list ->
-        EmployeeUiState(list, loadingUiState)
+    val uiState = combine(_loadingUiState, getRecords()) { loadingUiState, list ->
+        RecordUiState(list.first, list.second, loadingUiState)
     }.stateIn(
-        coroutineScope, SharingStarted.WhileSubscribed(5000), EmployeeUiState(
+        coroutineScope, SharingStarted.WhileSubscribed(5000), RecordUiState(
+            emptyList(),
             emptyList(),
             EmployeeLoadingState()
         )
@@ -37,9 +40,9 @@ class RecordPageViewModel(private val repository: EmployRepository) : ScreenMode
         refresh()
     }
 
-    fun delete(id: String) {
+    fun deleteEmploy(id: String) {
         coroutineScope.launch {
-            repository.deleteEmploy(id)
+            employRepository.deleteEmploy(id)
         }
     }
 
@@ -48,7 +51,7 @@ class RecordPageViewModel(private val repository: EmployRepository) : ScreenMode
             _loadingUiState.update {
                 it.copy(isLoading = true)
             }
-            val result = repository.refreshEmployee()
+            val result = refreshRecord()
             if (!result) {
                 _loadingUiState.update {
                     it.copy(isLoading = false, isError = true)

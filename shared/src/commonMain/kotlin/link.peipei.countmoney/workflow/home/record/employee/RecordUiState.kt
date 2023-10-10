@@ -1,10 +1,11 @@
 package link.peipei.countmoney.workflow.home.record.employee
 
-import link.peipei.countmoney.data.entities.EmployEntity
 import link.peipei.countmoney.data.entities.EmployWithSalary
+import link.peipei.countmoney.data.entities.GoodsEntity
 
-data class EmployeeUiState(
+data class RecordUiState(
     val employee: List<EmployWithSalary>,
+    val goods: List<GoodsEntity>,
     val employeeLoadingState: EmployeeLoadingState
 )
 
